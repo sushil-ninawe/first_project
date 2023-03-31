@@ -1,0 +1,10 @@
+pecific: Understand the company's fraud detection policies, procedures, and objectives by the end of Q1 2023.
+Specific and Measurable: Learn to extract, clean and transform data from multiple sources by the end of Q2 2023.
+Specific, Measurable, Achievable, Relevant, Time-bound: Develop a machine learning model with at least 90% accuracy in detecting fraudulent behavior in financial transactions by the end of Q3 2023.
+Specific, Measurable, Achievable, Relevant: Perform statistical analysis and modeling on at least 100,000 transactions per month by the end of Q4 2023 to identify patterns and anomalies that might be indicative of fraudulent behavior.
+Specific, Measurable, Achievable, Relevant: Evaluate the performance of at least three different machine learning models by the end of Q1 2024, and select the one that is best suited for the task.
+Specific, Measurable, Achievable, Relevant, Time-bound: Work with the IT team to optimize the implementation of the selected machine learning model by the end of Q2 2024.
+Specific, Achievable, Relevant: Investigate at least two new machine learning or data mining techniques that can be applied to fraud detection by the end of Q3 2024.
+Specific, Measurable, Achievable, Relevant, Time-bound: Communicate the results and insights obtained through the analysis to the team and management through monthly reports by the end of Q4 2024.
+Specific, Measurable, Achievable, Relevant, Time-bound: Collaborate with the team to develop at least two dashboards or visualizations to help monitor fraud detection in real-time by the end of Q2 2025.
+Specific, Measurable, Achievable, Relevant, Time-bound: Continuously seek feedback from the team and the management through monthly meetings to improve skills and performance throughout the employment tenure.
