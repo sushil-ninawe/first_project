@@ -144,3 +144,9 @@ Specific, Measurable, Achievable, Relevant, Time-bound: Continuously seek feedba
 
 
 Regenerate response
+
+
+
+
+
+gain a thorough understanding of the company's fraud detection processes, including the use of machine learning algorithms and technologies, and acquire knowledge of the various machine learning models and techniques used for fraud detection
