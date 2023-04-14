@@ -1,0 +1,6 @@
+Import the os, sys, and pytest modules.
+Check if the script is being run as the main module (__name__ == '__main__').
+Set up directories to store test results and coverage results using the os module.
+Create a list of command-line arguments to pass to pytest. The arguments specify the test directory, enable verbose output (-s), measure test coverage (--cov=., which measures coverage of the current directory), and generate coverage reports in HTML and XML format (--cov-report=html:<coverage_dir>/html and --cov-report=xml:<coverage_dir>/xml/coverage.xml).
+Call pytest.main() with the list of command-line arguments.
+Overall, this script automates the process of running pytest with specific options and generating coverage reports. It can be run from the command line or integrated into a larger build or test automation system.
