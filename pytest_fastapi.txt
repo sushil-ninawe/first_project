@@ -1,0 +1,22 @@
+import pytest
+from fastapi.testclient import TestClient
+from app import app
+
+@pytest.fixture(scope="module")
+def test_client():
+    # Create a test client
+    client = TestClient(app)
+    yield client
+
+def test_root(test_client):
+    # Test the root endpoint
+    response = test_client.get("/")
+    assert response.status_code == 200
+    assert response.json() == {"message": "Hello, world!"}
+
+def test_prediction(test_client):
+    # Test the prediction endpoint
+    input_data = {"feature_1": [1, 2, 3], "feature_2": [4, 5, 6]}
+    response = test_client.post("/predict", json=input_data)
+    assert response.status_code == 200
+    assert "predictions" in response.json()
