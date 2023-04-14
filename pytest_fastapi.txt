@@ -20,3 +20,18 @@ def test_prediction(test_client):
     response = test_client.post("/predict", json=input_data)
     assert response.status_code == 200
     assert "predictions" in response.json()
+    
+    
+    
+    
+    
+    
+    In this example, we define two test functions: test_root and test_prediction. We also define a test_client fixture that creates a test client and yields it to the tests.
+
+The test_root function tests the root endpoint ("/") and ensures that it returns a 200 status code and a JSON message indicating that the API is up and running.
+
+The test_prediction function tests the prediction endpoint ("/predict") and sends a request with a sample input data in JSON format. It tests that the response has a 200 status code and a predictions key in the response JSON.
+
+Note that we pass the test_client fixture to the test functions as an argument to use it as the test client.
+
+Finally, we can run the tests with pytest in the command line.
