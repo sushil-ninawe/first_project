@@ -35,3 +35,24 @@ The test_prediction function tests the prediction endpoint ("/predict") and send
 Note that we pass the test_client fixture to the test functions as an argument to use it as the test client.
 
 Finally, we can run the tests with pytest in the command line.
+
+
+
+
+
+
+
+
+
+
+SELECT email
+FROM users
+WHERE CHARINDEX('@', email) > 0
+    AND CHARINDEX('.', email) > 0
+    AND LEN(email) - LEN(REPLACE(email, '@', '')) = 1
+    AND LEN(email) - LEN(REPLACE(email, '.', '')) >= 2
+    AND CHARINDEX('@', email) < CHARINDEX('.', email)
+
+
+
+
