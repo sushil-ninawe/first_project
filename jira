@@ -60,3 +60,32 @@ Acceptance Criteria:
 
 ML models must be deployed to production successfully.
 The deployed models must be accessible to users.
+
+
+
+
+
+
+
+
+
+
+
+Create a sample script that can be used to capture parameters, metrics, and artifacts from a sandbox environment. The script should be able to:
+
+Capture all parameters, metrics, and artifacts that are relevant to the sandbox environment.
+Store the captured data in a central location.
+Generate reports that can be used to analyze the captured data.
+Acceptance Criteria:
+
+The script must be able to capture all parameters, metrics, and artifacts that are relevant to the sandbox environment.
+The captured data must be stored in a central location.
+The script must be able to generate reports that can be used to analyze the captured data.
+Subtasks
+
+Identify the parameters, metrics, and artifacts that need to be captured.
+Develop the script that will capture the data.
+Test the script and make sure it works correctly.
+Deploy the script to the sandbox environment.
+Document the script so that other users can use it.
+
