@@ -1,0 +1,30 @@
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
+import mlflow.pyfunc as pyfunc
+import pandas as pd
+
+app = FastAPI()
+
+# Load the MLflow model
+model_path = "path_to_your_model"
+loaded_model = pyfunc.load_model(model_path)
+
+@app.post('/predict')
+async def predict(request: Request):
+    data = await request.json()
+
+    # Extract features from the request data
+    features = pd.DataFrame(data)
+
+    # Preprocess the features using the transformation pipeline
+    transformed_features = loaded_model.transform(features)
+
+    # Make predictions using the loaded model
+    predictions = loaded_model.predict(transformed_features)
+
+    # Return the predictions as a JSON response
+    return JSONResponse(content={'predictions': predictions.tolist()})
+
+if __name__ == '__main__':
+    import uvicorn
+    uvicorn.run(app, host='0.0.0.0', port=5000)
