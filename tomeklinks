@@ -11,3 +11,28 @@ Here's a brief overview of how Tomek links are used with imbalanced datasets:
 4. After removing the samples involved in the Tomek links, the resulting dataset may have a better class separation and reduced overlap between classes. This can be beneficial for training machine learning models on imbalanced datasets.
 
 It's important to note that Tomek links are just one technique used in handling imbalanced datasets, and their effectiveness can vary depending on the dataset and problem at hand. It's recommended to combine Tomek links with other techniques, such as oversampling or undersampling, as part of a comprehensive strategy to address class imbalance.
+
+
+
+
+
+
+from imblearn.under_sampling import TomekLinks
+from sklearn.datasets import make_classification
+from collections import Counter
+
+# Generate an imbalanced synthetic dataset
+X, y = make_classification(n_samples=1000, n_features=10, n_informative=2,
+                           n_redundant=8, weights=[0.9, 0.1], random_state=42)
+
+# Display class distribution before undersampling
+print("Before undersampling:")
+print(Counter(y))
+
+# Apply Tomek links undersampling
+tomek_links = TomekLinks()
+X_resampled, y_resampled = tomek_links.fit_resample(X, y)
+
+# Display class distribution after undersampling
+print("\nAfter undersampling:")
+print(Counter(y_resampled))
