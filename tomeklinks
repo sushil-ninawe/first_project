@@ -1,0 +1,13 @@
+Tomek links are a technique used in the context of imbalanced datasets to identify and remove samples that are close to the decision boundary between the majority and minority classes. They help in improving the separation between classes and reducing the overlap between them. 
+
+Here's a brief overview of how Tomek links are used with imbalanced datasets:
+
+1. Tomek links identify pairs of samples that are of different classes and are nearest neighbors to each other. Formally, a pair of samples (x, y) is considered a Tomek link if there is no other sample z such that d(x, z) < d(x, y) or d(y, z) < d(x, y), where d denotes the distance metric.
+
+2. The samples involved in a Tomek link are often considered as noisy or ambiguous samples near the decision boundary. Removing them from the dataset can help create a clearer separation between the classes.
+
+3. One common approach is to remove the majority class sample from each Tomek link pair. This is based on the assumption that the majority class samples near the decision boundary are likely misclassified or noisy, while the minority class samples near the decision boundary are informative and useful.
+
+4. After removing the samples involved in the Tomek links, the resulting dataset may have a better class separation and reduced overlap between classes. This can be beneficial for training machine learning models on imbalanced datasets.
+
+It's important to note that Tomek links are just one technique used in handling imbalanced datasets, and their effectiveness can vary depending on the dataset and problem at hand. It's recommended to combine Tomek links with other techniques, such as oversampling or undersampling, as part of a comprehensive strategy to address class imbalance.
