@@ -1,0 +1,17 @@
+ADASYN (Adaptive Synthetic Sampling) is an oversampling technique designed to address class imbalance in a dataset. It generates synthetic samples for the minority class by considering the density distribution of the feature space.
+
+Here is a high-level overview of how ADASYN works:
+
+1. Calculate the number of synthetic samples to be generated for each minority class sample. This is determined based on the degree of class imbalance and is proportional to the difference between the number of samples in the majority class and the number of samples in the minority class.
+
+2. For each minority class sample, find its k nearest neighbors from both the minority and majority classes. The value of k is a user-defined parameter.
+
+3. Calculate the density distribution ratio for each minority class sample, which represents the imbalance level of its neighborhood. The density distribution ratio is calculated as the ratio of the number of majority class neighbors to the total number of neighbors (both minority and majority class).
+
+4. Compute the synthetic samples for each minority class sample by interpolating between the minority class sample and its selected nearest neighbors. The interpolation is done in the feature space based on the density distribution ratio.
+
+5. Combine the original minority class samples with the generated synthetic samples to create the final balanced dataset.
+
+ADASYN focuses on generating synthetic samples for those minority class samples that are harder to learn, as they have fewer neighbors from the majority class. By adaptively adjusting the sampling strategy based on the local density distribution, ADASYN aims to provide better generalization performance for the minority class during the learning process.
+
+It's important to note that the implementation details of ADASYN may vary depending on the library or framework you are using. The description above provides a general understanding of how ADASYN works conceptually.
