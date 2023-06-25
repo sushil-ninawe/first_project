@@ -1,0 +1,75 @@
+import numpy as np
+import tensorflow as tf
+from tensorflow.keras import layers
+
+class GANOversampler:
+    def __init__(self, input_dim, latent_dim, generator_hidden_units, discriminator_hidden_units):
+        self.input_dim = input_dim
+        self.latent_dim = latent_dim
+
+        self.generator = self.build_generator(generator_hidden_units)
+        self.discriminator = self.build_discriminator(discriminator_hidden_units)
+
+        self.generator_optimizer = tf.keras.optimizers.Adam()
+        self.discriminator_optimizer = tf.keras.optimizers.Adam()
+
+    def build_generator(self, hidden_units):
+        model = tf.keras.Sequential()
+        for units in hidden_units:
+            model.add(layers.Dense(units, activation='relu', input_dim=self.latent_dim))
+        model.add(layers.Dense(self.input_dim, activation='tanh'))
+        return model
+
+    def build_discriminator(self, hidden_units):
+        model = tf.keras.Sequential()
+        for units in hidden_units:
+            model.add(layers.Dense(units, activation='relu', input_dim=self.input_dim))
+        model.add(layers.Dense(1, activation='sigmoid'))
+        return model
+
+    def train(self, X_minority, epochs, batch_size):
+        X_minority = (X_minority.astype(np.float32) - 0.5) / 0.5  # Normalize input to range [-1, 1]
+        num_samples = X_minority.shape[0]
+
+        for epoch in range(epochs):
+            for _ in range(num_samples // batch_size):
+                # Train discriminator
+                noise = np.random.normal(0, 1, (batch_size, self.latent_dim))
+                generated_samples = self.generator.predict(noise)
+                real_samples = X_minority[np.random.randint(0, num_samples, batch_size)]
+                discriminator_loss = self.train_discriminator(real_samples, generated_samples)
+
+                # Train generator
+                noise = np.random.normal(0, 1, (batch_size, self.latent_dim))
+                generator_loss = self.train_generator(noise)
+
+            if epoch % 10 == 0:
+                print(f"Epoch {epoch+1}, Discriminator Loss: {discriminator_loss}, Generator Loss: {generator_loss}")
+
+    @tf.function
+    def train_discriminator(self, real_samples, generated_samples):
+        with tf.GradientTape() as tape:
+            real_output = self.discriminator(real_samples, training=True)
+            generated_output = self.discriminator(generated_samples, training=True)
+            real_loss = tf.keras.losses.BinaryCrossentropy(from_logits=True)(tf.ones_like(real_output), real_output)
+            generated_loss = tf.keras.losses.BinaryCrossentropy(from_logits=True)(tf.zeros_like(generated_output), generated_output)
+            total_loss = real_loss + generated_loss
+        gradients = tape.gradient(total_loss, self.discriminator.trainable_variables)
+        self.discriminator_optimizer.apply_gradients(zip(gradients, self.discriminator.trainable_variables))
+        return total_loss
+
+    @tf.function
+    def train_generator(self, noise):
+        with tf.GradientTape() as tape:
+            generated_samples = self.generator(noise, training=True)
+            generated_output = self.discriminator(generated_samples, training=True)
+            generator_loss = tf.keras.losses.BinaryCrossentropy(from_logits=True)(tf.ones_like(generated_output), generated_output)
+        gradients = tape.gradient(generator_loss, self.generator.trainable_variables)
+        self.generator_optimizer.apply_gradients(zip(gradients, self.generator.trainable_variables))
+        return generator_loss
+
+    def generate_samples(self, num_samples):
+        noise = np.random.normal(0, 1, (num_samples, self.latent_dim))
+        generated_samples = self.generator.predict(noise)
+        generated_samples = (generated_samples * 0.5) + 0.5  # Scale samples to range [0, 1]
+        return generated_samples
