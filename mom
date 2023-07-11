@@ -1,1 +1,31 @@
+from pyspark.sql import SparkSession
+import phonenumbers
+
+# Initialize Spark session
+spark = SparkSession.builder.getOrCreate()
+
+# Define the UDF for phone number validation
+def validate_phone_number(phone_number):
+    try:
+        number = phonenumbers.parse(phone_number, None)
+        return phonenumbers.is_valid_number(number)
+    except phonenumbers.phonenumberutil.NumberParseException:
+        return False
+
+# Register the UDF
+spark.udf.register("validatePhoneNumber", validate_phone_number)
+
+# Create a sample DataFrame with phone numbers
+data = [("John", "+1234567890"),
+        ("Jane", "+1987654321"),
+        ("Bob", "+9876543210"),
+        ("Alice", "1234567890")]
+
+df = spark.createDataFrame(data, ["name", "phone_number"])
+
+# Apply the UDF to validate phone numbers
+df = df.withColumn("is_valid_phone", spark.sql("validatePhoneNumber(phone_number)"))
+
+# Show the results
+df.show()
  
