@@ -1,20 +1,50 @@
-from pyspark.sql import SparkSession
-from pyspark.sql.functions import udf
-from pyspark.sql.types import BooleanType
-import phonenumbers
+Sure, here's a Python script that uses the Iris dataset to train a Random Forest classification model using MLflow's autologging feature:
 
-# Initialize SparkSession
-spark = SparkSession.builder.getOrCreate()
+```python
+import mlflow
+import mlflow.sklearn
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
 
-# Define UDF for phone number validation
-validate_phone_number = udf(lambda number: is_valid_number(phonenumbers.parse(number, "IN")), BooleanType())
+# Load the Iris dataset
+data = pd.read_csv('https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data', header=None)
+data.columns = ['sepal_length', 'sepal_width', 'petal_length', 'petal_width', 'class']
 
-# Create a DataFrame with phone numbers
-data = [("John", "+911234567890"), ("Jane", "+919876543210"), ("Bob", "+1234567890")]
-df = spark.createDataFrame(data, ["Name", "PhoneNumber"])
+# Split the dataset into features and target
+X = data.drop('class', axis=1)
+y = data['class']
 
-# Apply the UDF to validate phone numbers
-df_validated = df.withColumn("IsValidPhoneNumber", validate_phone_number(df["PhoneNumber"]))
+# Split the data into train and test sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Display the validated phone numbers
-df_validated.show()
+# Initialize MLflow tracking
+mlflow.set_tracking_uri('YOUR_MLFLOW_TRACKING_URI')
+mlflow.set_experiment('iris_random_forest')
+
+# Start MLflow run
+with mlflow.start_run() as run:
+    # Initialize and train the Random Forest model
+    rf_model = RandomForestClassifier(n_estimators=100, random_state=42)
+    rf_model.fit(X_train, y_train)
+
+    # Make predictions on the test set
+    y_pred = rf_model.predict(X_test)
+
+    # Calculate accuracy
+    accuracy = accuracy_score(y_test, y_pred)
+
+    # Log the model and parameters using autologging
+    mlflow.sklearn.autolog()
+
+    # Log additional metrics
+    mlflow.log_metric('accuracy', accuracy)
+
+    # Save the model
+    mlflow.sklearn.save_model(rf_model, 'iris_rf_model')
+```
+
+In this script, replace `'YOUR_MLFLOW_TRACKING_URI'` with the actual URI of your MLflow tracking server. This script loads the Iris dataset, splits it into training and testing sets, trains a Random Forest model, and logs all the necessary information using MLflow's autologging feature.
+
+Make sure you have MLflow installed (`pip install mlflow`) and that you have a running MLflow tracking server before running the script.
