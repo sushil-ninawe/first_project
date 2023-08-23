@@ -1,32 +1,26 @@
- 
-from pyspark.sql import SparkSession
-import phonenumbers
+In Hive, you can achieve this by using a combination of the `SELECT` statement along with the `LEFT JOIN` and `CASE` clauses. Here's an example query to check if two tables (`table1` and `table2`) are exactly the same:
 
-def format_phone_number(phone_number):
-    try:
-        parsed_number = phonenumbers.parse(phone_number, None)
-        if phonenumbers.is_valid_number(parsed_number):
-            return phonenumbers.format_number(parsed_number, phonenumbers.PhoneNumberFormat.INTERNATIONAL)
-    except phonenumbers.phonenumberutil.NumberParseException:
-        pass  # Invalid phone number
+```sql
+SELECT COUNT(*) AS row_count_diff
+FROM (
+    SELECT * FROM table1
+    UNION ALL
+    SELECT * FROM table2
+) combined
+LEFT JOIN table1 t1 ON combined.column1 = t1.column1
+                     AND combined.column2 = t1.column2
+                     -- Add more columns as needed
+LEFT JOIN table2 t2 ON combined.column1 = t2.column1
+                     AND combined.column2 = t2.column2
+                     -- Add more columns as needed
+WHERE t1.column1 IS NULL OR t2.column1 IS NULL;
+```
 
-    return None
+In this query:
+- We combine the rows from both tables using `UNION ALL`.
+- We then perform left joins on both `table1` and `table2` based on the columns that uniquely identify rows (you need to replace `column1`, `column2`, etc. with the actual column names you want to use).
+- If a row exists in one table but not in the other, the corresponding joined table's columns will be `NULL`.
+- The `WHERE` clause filters out rows where any of the joined table's columns are `NULL`.
+- Finally, the query returns the count of differing rows. If the count is 0, the tables are exactly the same.
 
-if __name__ == "__main__":
-    spark = SparkSession.builder \
-        .appName("PhoneNumberValidation") \
-        .getOrCreate()
-
-    # Assuming the phone numbers are stored in a DataFrame column called 'phone_number'
-    input_df = spark.read.csv("path/to/input.csv", header=True, inferSchema=True)
-    
-    # Registering the UDF to format phone numbers
-    format_udf = spark.udf.register("format", format_phone_number)
-    
-    # Applying the UDF to the 'phone_number' column and creating a new column 'formatted_number'
-    output_df = input_df.withColumn("formatted_number", format_udf(input_df.phone_number))
-    
-    # Storing the output DataFrame with formatted phone numbers
-    output_df.write.csv("path/to/output.csv", header=True)
-
-    spark.stop()
+Keep in mind that this query assumes the two tables have the same structure and column names. Adjust the column names accordingly based on your table's schema.
