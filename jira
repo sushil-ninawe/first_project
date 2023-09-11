@@ -1,100 +1,27 @@
-Title: Set up platform for ML testing harness using mlflow
+Certainly, if you want to create a compelling story of the employee's journey from the military to your organization, you can rephrase the questions in a narrative format. Here are some revised questions:
 
-Description:
+1. Can you take us through your military career, sharing notable experiences and accomplishments along the way?
 
-Create a platform for ML testing harness using mlflow. The platform should include the following components:
+2. What pivotal moment or realization inspired you to seek a new career outside the military, eventually leading you to our organization?
 
-A central repository for storing ML models and experiment results
-A mechanism for tracking and managing ML experiments
-A way to automatically deploy ML models to production
-Acceptance Criteria:
+3. Describe the path that brought you to our veteran internship program. What made you decide to embark on this journey?
 
-The platform must be able to store ML models and experiment results.
-The platform must be able to track and manage ML experiments.
-The platform must be able to automatically deploy ML models to production.
-Subtask 1
+4. Share some specific skills and experiences from your military service that have proven to be invaluable in your role here. 
 
-Title: Install mlflow
+5. Reflect on the challenges you encountered during your transition from military life to corporate culture. How did you conquer these obstacles?
 
-Description:
+6. Tell us about the moment when you realized our organization's culture and mission resonated with you and made you want to be a part of it.
 
-Install mlflow on the development machine.
+7. Narrate an outstanding project or achievement from your internship that you're particularly proud of and how it reflects your transition story.
 
-Acceptance Criteria:
+8. Highlight how the veteran internship program has played a role in your growth and integration within our company.
 
-mlflow must be installed successfully.
-The mlflow command-line tool must be available.
-Subtask 2
+9. Compare and contrast the military and corporate environments, sharing anecdotes of how your military background has been beneficial in adapting to this change.
 
-Title: Create a central repository for storing ML models and experiment results
+10. Offer guidance for fellow veterans considering a career transition through a veteran internship program, drawing from your own experience.
 
-Description:
+11. Paint a picture of your future within our organization. What are your aspirations and the path you envision taking?
 
-Create a central repository for storing ML models and experiment results. The repository can be a local directory, a cloud storage service, or a database.
+12. Explain how your military journey continues to influence your work and contributions, weaving your story into the fabric of our organization.
 
-Acceptance Criteria:
-
-The repository must be created successfully.
-The repository must be accessible to all users who need to store ML models and experiment results.
-Subtask 3
-
-Title: Configure mlflow to track and manage ML experiments
-
-Description:
-
-Configure mlflow to track and manage ML experiments. This includes setting up experiment tracking, logging, and metrics.
-
-Acceptance Criteria:
-
-mlflow must be configured to track and manage ML experiments.
-Experiment tracking, logging, and metrics must be enabled.
-Subtask 4
-
-Title: Deploy ML models to production
-
-Description:
-
-Deploy ML models to production. This can be done using a variety of methods, such as Docker, Kubernetes, or AWS Lambda.
-
-Acceptance Criteria:
-
-ML models must be deployed to production successfully.
-The deployed models must be accessible to users.
-
-
-
-
-
-
-
-
-
-
-
-Create a sample script that can be used to capture parameters, metrics, and artifacts from a sandbox environment. The script should be able to:
-
-Capture all parameters, metrics, and artifacts that are relevant to the sandbox environment.
-Store the captured data in a central location.
-Generate reports that can be used to analyze the captured data.
-Acceptance Criteria:
-
-The script must be able to capture all parameters, metrics, and artifacts that are relevant to the sandbox environment.
-The captured data must be stored in a central location.
-The script must be able to generate reports that can be used to analyze the captured data.
-Subtasks
-
-Identify the parameters, metrics, and artifacts that need to be captured.
-Develop the script that will capture the data.
-Test the script and make sure it works correctly.
-Deploy the script to the sandbox environment.
-Document the script so that other users can use it.
-
-
-
-
-
-
-processes, we recognize the need for a robust and efficient ML testing harness. The purpose of this epic is to develop a comprehensive ML testing harness that enables automated testing and validation of ML models throughout their lifecycle.
-
-The ML testing harness will provide a unified platform to facilitate the testing and evaluation of ML models, covering areas such as accuracy, performance, fairness, robustness, and reliability. It will support both traditional ML models and deep learning models.
-
+These questions, when answered in a narrative style, can help create a compelling and personal story of the employee's transition, which can be shared across the firm to generate interest in hiring more veterans.
