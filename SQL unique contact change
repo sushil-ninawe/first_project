@@ -1,0 +1,38 @@
+WITH recent_changes AS (
+  SELECT
+    *,
+    LAG("Email 1") OVER (PARTITION BY "Employee ID" ORDER BY "dt2_start") AS prev_email_1,
+    LAG("Email 2") OVER (PARTITION BY "Employee ID" ORDER BY "dt2_start") AS prev_email_2,
+    LAG("Phone 1") OVER (PARTITION BY "Employee ID" ORDER BY "dt2_start") AS prev_phone_1,
+    LAG("Phone 2") OVER (PARTITION BY "Employee ID" ORDER BY "dt2_start") AS prev_phone_2,
+    LAG("Phone 3") OVER (PARTITION BY "Employee ID" ORDER BY "dt2_start") AS prev_phone_3,
+    LAG("Phone 4") OVER (PARTITION BY "Employee ID" ORDER BY "dt2_start") AS prev_phone_4,
+    LAG("Phone 5") OVER (PARTITION BY "Employee ID" ORDER BY "dt2_start") AS prev_phone_5
+  FROM
+    employee_changes
+)
+SELECT
+  "Employee ID",
+  "First Name",
+  "Last Name",
+  "Email 1" AS current_email_1,
+  "Email 2" AS current_email_2,
+  CASE
+    WHEN "Email 1" <> prev_email_1 AND "dt2_start" >= DATEADD(DAY, -5, GETDATE()) THEN 'Email Change'
+    WHEN "Email 2" <> prev_email_2 AND "dt2_start" >= DATEADD(DAY, -5, GETDATE()) THEN 'Email Change'
+    WHEN "Phone 1" <> prev_phone_1 AND "dt2_start" >= DATEADD(DAY, -5, GETDATE()) AND "Phone 1" IS NOT NULL THEN 'Phone Change'
+    WHEN "Phone 2" <> prev_phone_2 AND "dt2_start" >= DATEADD(DAY, -5, GETDATE()) AND "Phone 2" IS NOT NULL THEN 'Phone Change'
+    WHEN "Phone 3" <> prev_phone_3 AND "dt2_start" >= DATEADD(DAY, -5, GETDATE()) AND "Phone 3" IS NOT NULL THEN 'Phone Change'
+    WHEN "Phone 4" <> prev_phone_4 AND "dt2_start" >= DATEADD(DAY, -5, GETDATE()) AND "Phone 4" IS NOT NULL THEN 'Phone Change'
+    WHEN "Phone 5" <> prev_phone_5 AND "dt2_start" >= DATEADD(DAY, -5, GETDATE()) AND "Phone 5" IS NOT NULL THEN 'Phone Change'
+    ELSE NULL
+  END AS change_flag
+FROM
+  recent_changes
+WHERE
+  ("Email 1" <> prev_email_1 OR "Email 2" <> prev_email_2 OR
+   "Phone 1" <> prev_phone_1 OR "Phone 2" <> prev_phone_2 OR
+   "Phone 3" <> prev_phone_3 OR "Phone 4" <> prev_phone_4 OR
+   "Phone 5" <> prev_phone_5)
+ORDER BY
+  "Employee ID", "dt2_start" DESC;
