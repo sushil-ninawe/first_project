@@ -1,45 +1,62 @@
+To accomplish this task in PySpark, you can use Spark SQL to load the Hive dataset and then apply the necessary transformations to detect changes in contact information for employees while avoiding duplicate contacts. Here's a step-by-step code example:
 
+```python
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import when, col
 
+# Create a Spark session
+spark = SparkSession.builder.appName("ContactChangeDetection").enableHiveSupport().getOrCreate()
 
-profile picture
-Write a code to log the code artifact using mlflow where it captures the code from where it's being called
-View other drafts
+# Load the Hive dataset into a DataFrame
+hive_table_name = "your_hive_table_name"
+df = spark.sql(f"SELECT * FROM {hive_table_name}")
 
+# Define a window specification for employee grouping and ordering by date
+from pyspark.sql.window import Window
+from pyspark.sql.functions import lag
 
+window_spec = Window.partitionBy("emp_id").orderBy("date_start")
 
+# Calculate the previous row's contact information for each employee
+df = df.withColumn("prev_email_1", lag("email_1").over(window_spec))
+df = df.withColumn("prev_email_2", lag("email_2").over(window_spec))
+df = df.withColumn("prev_phn_1", lag("phn_1").over(window_spec))
+df = df.withColumn("prev_phn_2", lag("phn_2").over(window_spec))
 
+# Define a condition to check if there is a change in contact
+change_condition = (
+    (col("email_1") != col("prev_email_1")) |
+    (col("email_2") != col("prev_email_2")) |
+    (col("phn_1") != col("prev_phn_1")) |
+    (col("phn_2") != col("prev_phn_2"))
+)
 
+# Identify changes in contact and exclude duplicates
+df = df.withColumn("is_contact_change", when(change_condition, 1).otherwise(0))
+df = df.withColumn("is_duplicate_contact", when(
+    (col("is_contact_change") == 1) &
+    (
+        ((col("email_1") == col("prev_email_1")) |
+         (col("email_1") == col("prev_email_2")) |
+         (col("email_2") == col("prev_email_1")) |
+         (col("email_2") == col("prev_email_2")) |
+         (col("phn_1") == col("prev_phn_1")) |
+         (col("phn_1") == col("prev_phn_2")) |
+         (col("phn_2") == col("prev_phn_1")) |
+         (col("phn_2") == col("prev_phn_2")))
+    ), 0).otherwise(1))
 
+# Show the DataFrame with change detection and duplicate contact detection
+df.show()
+```
 
+In this code:
 
+1. We load the Hive dataset into a DataFrame.
+2. We define a window specification for partitioning by employee (`emp_id`) and ordering by the `date_start`.
+3. We use the `lag` function to calculate the previous values of contact information for each employee within the window.
+4. We define conditions to check if there is a change in contact information and if the new contact is already present in other columns.
+5. We create columns `is_contact_change` and `is_duplicate_contact` to indicate whether there is a change in contact information and whether it's a duplicate contact.
+6. Finally, we display the DataFrame with the detection results.
 
-
-
-
-
-Sure, here is the code to log the code artifact using mlflow where it captures the code from where it's being called:
-
-Python
-import mlflow
-
-# Start a run
-with mlflow.start_run() as run:
-
-    # Log the code artifact
-    mlflow.log_artifact(open(__file__, 'rb'))
-
-# Print the run information
-print(run.info)
-Use code with caution. Learn more
-This code will log the current file, which is the file where the code is being called, as an artifact. The artifact will be stored in the MLflow tracking server. You can then view the artifact in the MLflow UI.
-
-Here is an example of how to view the artifact in the MLflow UI:
-
-Go to the MLflow UI.
-Click on the "Experiments" tab.
-Select the experiment that contains the run that you logged the artifact to.
-Click on the "Runs" tab.
-Select the run that you logged the artifact to.
-Click on the "Artifacts" tab.
-The artifact will be listed in the "Artifacts" tab.
-You can also download the artifact by clicking on the "Download" button next to the artifact name.
+Please replace `"your_hive_table_name"` with the actual name of your Hive table.
