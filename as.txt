@@ -1,62 +1,30 @@
-To accomplish this task in PySpark, you can use Spark SQL to load the Hive dataset and then apply the necessary transformations to detect changes in contact information for employees while avoiding duplicate contacts. Here's a step-by-step code example:
+You can achieve this using PySpark as well. Here's how you can create a fifth column with a set of all phone numbers using PySpark:
 
 ```python
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import when, col
+from pyspark.sql.functions import udf
+from pyspark.sql.types import ArrayType, StringType
 
-# Create a Spark session
-spark = SparkSession.builder.appName("ContactChangeDetection").enableHiveSupport().getOrCreate()
+# Initialize a Spark session
+spark = SparkSession.builder.appName("PhoneNumbers").getOrCreate()
 
-# Load the Hive dataset into a DataFrame
-hive_table_name = "your_hive_table_name"
-df = spark.sql(f"SELECT * FROM {hive_table_name}")
+# Sample DataFrame
+data = [(1, "123-456-7890", "987-654-3210", "555-555-5555"),
+        (2, "111-222-3333", "444-555-6666", "777-888-9999")]
+columns = ["emp-id", "phn1", "phn2", "phn3"]
+df = spark.createDataFrame(data, columns)
 
-# Define a window specification for employee grouping and ordering by date
-from pyspark.sql.window import Window
-from pyspark.sql.functions import lag
+# Define a UDF to create a set of all phone numbers
+def create_phone_set(phn1, phn2, phn3):
+    return set([phn1, phn2, phn3])
 
-window_spec = Window.partitionBy("emp_id").orderBy("date_start")
+udf_create_phone_set = udf(create_phone_set, ArrayType(StringType()))
 
-# Calculate the previous row's contact information for each employee
-df = df.withColumn("prev_email_1", lag("email_1").over(window_spec))
-df = df.withColumn("prev_email_2", lag("email_2").over(window_spec))
-df = df.withColumn("prev_phn_1", lag("phn_1").over(window_spec))
-df = df.withColumn("prev_phn_2", lag("phn_2").over(window_spec))
+# Add a new column 'all_phones' with the set of all phone numbers
+df = df.withColumn("all_phones", udf_create_phone_set(df["phn1"], df["phn2"], df["phn3"]))
 
-# Define a condition to check if there is a change in contact
-change_condition = (
-    (col("email_1") != col("prev_email_1")) |
-    (col("email_2") != col("prev_email_2")) |
-    (col("phn_1") != col("prev_phn_1")) |
-    (col("phn_2") != col("prev_phn_2"))
-)
-
-# Identify changes in contact and exclude duplicates
-df = df.withColumn("is_contact_change", when(change_condition, 1).otherwise(0))
-df = df.withColumn("is_duplicate_contact", when(
-    (col("is_contact_change") == 1) &
-    (
-        ((col("email_1") == col("prev_email_1")) |
-         (col("email_1") == col("prev_email_2")) |
-         (col("email_2") == col("prev_email_1")) |
-         (col("email_2") == col("prev_email_2")) |
-         (col("phn_1") == col("prev_phn_1")) |
-         (col("phn_1") == col("prev_phn_2")) |
-         (col("phn_2") == col("prev_phn_1")) |
-         (col("phn_2") == col("prev_phn_2")))
-    ), 0).otherwise(1))
-
-# Show the DataFrame with change detection and duplicate contact detection
+# Show the DataFrame with the new column
 df.show()
 ```
 
-In this code:
-
-1. We load the Hive dataset into a DataFrame.
-2. We define a window specification for partitioning by employee (`emp_id`) and ordering by the `date_start`.
-3. We use the `lag` function to calculate the previous values of contact information for each employee within the window.
-4. We define conditions to check if there is a change in contact information and if the new contact is already present in other columns.
-5. We create columns `is_contact_change` and `is_duplicate_contact` to indicate whether there is a change in contact information and whether it's a duplicate contact.
-6. Finally, we display the DataFrame with the detection results.
-
-Please replace `"your_hive_table_name"` with the actual name of your Hive table.
+This code initializes a PySpark session, defines a User-Defined Function (UDF) to create a set of all phone numbers, and then adds a new column 'all_phones' to the DataFrame using the UDF. The result will be a DataFrame with the desired fifth column containing sets of phone numbers.
