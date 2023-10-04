@@ -1,0 +1,105 @@
+Advanced data manipulation in PySpark involves performing complex operations on DataFrames or RDDs (Resilient Distributed Datasets). Here, we'll cover some advanced data manipulation techniques:
+
+### 1. Joining DataFrames
+
+You can combine two DataFrames based on a common column using the `join` method.
+
+```python
+# Join two DataFrames
+result_df = df1.join(df2, on="common_column", how="inner")
+```
+
+You can use different types of joins like "inner," "left," "right," or "outer" to control how rows are combined.
+
+### 2. Aggregations
+
+You can perform complex aggregations on your data.
+
+```python
+# Group by a column and compute multiple aggregations
+result = df.groupBy("group_column").agg(
+    {"column1": "sum", "column2": "avg", "column3": "max"}
+)
+```
+
+### 3. Window Functions
+
+Window functions allow you to perform calculations across a set of table rows related to the current row.
+
+```python
+from pyspark.sql.window import Window
+from pyspark.sql.functions import rank
+
+window_spec = Window.partitionBy("partition_column").orderBy("order_column")
+
+result_df = df.withColumn("rank", rank().over(window_spec))
+```
+
+### 4. Pivot Tables
+
+You can create pivot tables to transform rows into columns.
+
+```python
+pivot_df = df.groupBy("group_column").pivot("pivot_column").agg({"agg_column": "sum"})
+```
+
+### 5. User-Defined Functions (UDFs)
+
+You can define custom functions and apply them to DataFrame columns.
+
+```python
+from pyspark.sql.functions import udf
+from pyspark.sql.types import IntegerType
+
+# Define a UDF
+@udf(IntegerType())
+def custom_function(value):
+    return value * 2
+
+# Apply the UDF to a column
+result_df = df.withColumn("new_column", custom_function(df["old_column"]))
+```
+
+### 6. Handling Missing Data
+
+PySpark provides methods to handle missing or null values in DataFrames.
+
+```python
+# Drop rows with null values
+df.dropna()
+
+# Fill null values with a specific value
+df.fillna(0, subset=["column1", "column2"])
+```
+
+### 7. Advanced Filtering
+
+You can use complex conditions for filtering.
+
+```python
+from pyspark.sql.functions import col
+
+result_df = df.filter((col("column1") > 50) & (col("column2") < 100))
+```
+
+### 8. Sampling
+
+You can sample data for various purposes, such as testing or analysis.
+
+```python
+sampled_df = df.sample(withReplacement=False, fraction=0.1, seed=42)
+```
+
+### 9. Handling Date and Time
+
+PySpark provides functions for working with date and time data.
+
+```python
+from pyspark.sql.functions import year, month, dayofmonth
+
+df = df.withColumn("year", year(df["date_column"]))
+df = df.withColumn("month", month(df["date_column"]))
+df = df.withColumn("day", dayofmonth(df["date_column"]))
+```
+
+These are just a few examples of advanced data manipulation techniques in PySpark. The possibilities are extensive, and you can combine these methods to perform complex
