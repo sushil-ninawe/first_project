@@ -1,38 +1,62 @@
-WITH recent_changes AS (
-  SELECT
-    *,
-    LAG("Email 1") OVER (PARTITION BY "Employee ID" ORDER BY "dt2_start") AS prev_email_1,
-    LAG("Email 2") OVER (PARTITION BY "Employee ID" ORDER BY "dt2_start") AS prev_email_2,
-    LAG("Phone 1") OVER (PARTITION BY "Employee ID" ORDER BY "dt2_start") AS prev_phone_1,
-    LAG("Phone 2") OVER (PARTITION BY "Employee ID" ORDER BY "dt2_start") AS prev_phone_2,
-    LAG("Phone 3") OVER (PARTITION BY "Employee ID" ORDER BY "dt2_start") AS prev_phone_3,
-    LAG("Phone 4") OVER (PARTITION BY "Employee ID" ORDER BY "dt2_start") AS prev_phone_4,
-    LAG("Phone 5") OVER (PARTITION BY "Employee ID" ORDER BY "dt2_start") AS prev_phone_5
-  FROM
-    employee_changes
+To accomplish this task in PySpark, you can use Spark SQL to load the Hive dataset and then apply the necessary transformations to detect changes in contact information for employees while avoiding duplicate contacts. Here's a step-by-step code example:
+
+```python
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import when, col
+
+# Create a Spark session
+spark = SparkSession.builder.appName("ContactChangeDetection").enableHiveSupport().getOrCreate()
+
+# Load the Hive dataset into a DataFrame
+hive_table_name = "your_hive_table_name"
+df = spark.sql(f"SELECT * FROM {hive_table_name}")
+
+# Define a window specification for employee grouping and ordering by date
+from pyspark.sql.window import Window
+from pyspark.sql.functions import lag
+
+window_spec = Window.partitionBy("emp_id").orderBy("date_start")
+
+# Calculate the previous row's contact information for each employee
+df = df.withColumn("prev_email_1", lag("email_1").over(window_spec))
+df = df.withColumn("prev_email_2", lag("email_2").over(window_spec))
+df = df.withColumn("prev_phn_1", lag("phn_1").over(window_spec))
+df = df.withColumn("prev_phn_2", lag("phn_2").over(window_spec))
+
+# Define a condition to check if there is a change in contact
+change_condition = (
+    (col("email_1") != col("prev_email_1")) |
+    (col("email_2") != col("prev_email_2")) |
+    (col("phn_1") != col("prev_phn_1")) |
+    (col("phn_2") != col("prev_phn_2"))
 )
-SELECT
-  "Employee ID",
-  "First Name",
-  "Last Name",
-  "Email 1" AS current_email_1,
-  "Email 2" AS current_email_2,
-  CASE
-    WHEN "Email 1" <> prev_email_1 AND "dt2_start" >= DATEADD(DAY, -5, GETDATE()) THEN 'Email Change'
-    WHEN "Email 2" <> prev_email_2 AND "dt2_start" >= DATEADD(DAY, -5, GETDATE()) THEN 'Email Change'
-    WHEN "Phone 1" <> prev_phone_1 AND "dt2_start" >= DATEADD(DAY, -5, GETDATE()) AND "Phone 1" IS NOT NULL THEN 'Phone Change'
-    WHEN "Phone 2" <> prev_phone_2 AND "dt2_start" >= DATEADD(DAY, -5, GETDATE()) AND "Phone 2" IS NOT NULL THEN 'Phone Change'
-    WHEN "Phone 3" <> prev_phone_3 AND "dt2_start" >= DATEADD(DAY, -5, GETDATE()) AND "Phone 3" IS NOT NULL THEN 'Phone Change'
-    WHEN "Phone 4" <> prev_phone_4 AND "dt2_start" >= DATEADD(DAY, -5, GETDATE()) AND "Phone 4" IS NOT NULL THEN 'Phone Change'
-    WHEN "Phone 5" <> prev_phone_5 AND "dt2_start" >= DATEADD(DAY, -5, GETDATE()) AND "Phone 5" IS NOT NULL THEN 'Phone Change'
-    ELSE NULL
-  END AS change_flag
-FROM
-  recent_changes
-WHERE
-  ("Email 1" <> prev_email_1 OR "Email 2" <> prev_email_2 OR
-   "Phone 1" <> prev_phone_1 OR "Phone 2" <> prev_phone_2 OR
-   "Phone 3" <> prev_phone_3 OR "Phone 4" <> prev_phone_4 OR
-   "Phone 5" <> prev_phone_5)
-ORDER BY
-  "Employee ID", "dt2_start" DESC;
+
+# Identify changes in contact and exclude duplicates
+df = df.withColumn("is_contact_change", when(change_condition, 1).otherwise(0))
+df = df.withColumn("is_duplicate_contact", when(
+    (col("is_contact_change") == 1) &
+    (
+        ((col("email_1") == col("prev_email_1")) |
+         (col("email_1") == col("prev_email_2")) |
+         (col("email_2") == col("prev_email_1")) |
+         (col("email_2") == col("prev_email_2")) |
+         (col("phn_1") == col("prev_phn_1")) |
+         (col("phn_1") == col("prev_phn_2")) |
+         (col("phn_2") == col("prev_phn_1")) |
+         (col("phn_2") == col("prev_phn_2")))
+    ), 0).otherwise(1))
+
+# Show the DataFrame with change detection and duplicate contact detection
+df.show()
+```
+
+In this code:
+
+1. We load the Hive dataset into a DataFrame.
+2. We define a window specification for partitioning by employee (`emp_id`) and ordering by the `date_start`.
+3. We use the `lag` function to calculate the previous values of contact information for each employee within the window.
+4. We define conditions to check if there is a change in contact information and if the new contact is already present in other columns.
+5. We create columns `is_contact_change` and `is_duplicate_contact` to indicate whether there is a change in contact information and whether it's a duplicate contact.
+6. Finally, we display the DataFrame with the detection results.
+
+Please replace `"your_hive_table_name"` with the actual name of your Hive table.
