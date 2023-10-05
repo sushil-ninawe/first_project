@@ -1,4 +1,4 @@
-To account for the possibility that certain phone numbers can be blank in your dataset, you can modify the code to handle this scenario. Here's the adjusted code:
+To account for blank or null values in the `is_duplicate_contact` flag, you can further refine the code. Here's an updated version that considers these cases:
 
 ```python
 from pyspark.sql import SparkSession
@@ -34,26 +34,24 @@ df = df.withColumn("is_phone_change", when(phone_change_condition, 1).otherwise(
 df = df.withColumn("is_duplicate_contact", when(
     (col("is_email_change") == 1) &
     (
-        ((col("email_1") == col("prev_email_1")) |
-         (col("email_1") == col("prev_email_2")) |
-         (col("email_2") == col("prev_email_1")) |
-         (col("email_2") == col("prev_email_2")))
+        ((col("prev_email_1").isNotNull() & col("email_1") == col("prev_email_1")) |
+         (col("prev_email_1").isNotNull() & col("email_1") == col("prev_email_2")) |
+         (col("prev_email_2").isNotNull() & col("email_2") == col("prev_email_1")) |
+         (col("prev_email_2").isNotNull() & col("email_2") == col("prev_email_2")))
     ) |
     (col("is_phone_change") == 1) &
     (
-        ((col("phn_1") == col("prev_phn_1")) |
-         (col("phn_1") == col("prev_phn_2")) |
-         (col("phn_2") == col("prev_phn_1")) |
-         (col("phn_2") == col("prev_phn_2")))
+        ((col("prev_phn_1").isNotNull() & col("phn_1") == col("prev_phn_1")) |
+         (col("prev_phn_1").isNotNull() & col("phn_1") == col("prev_phn_2")) |
+         (col("prev_phn_2").isNotNull() & col("phn_2") == col("prev_phn_1")) |
+         (col("prev_phn_2").isNotNull() & col("phn_2") == col("prev_phn_2")))
     ), 0).otherwise(1))
 
 # Show the DataFrame with change detection and duplicate contact detection
 df.show()
 ```
 
-In this adjusted code:
+In this updated code:
 
-1. We calculate changes in email and phone numbers separately to handle the possibility of blank phone numbers.
-2. We create the columns `is_email_change` and `is_phone_change` to indicate whether there is a change in email and phone numbers.
-3. We modify the condition for `is_duplicate_contact` to consider both email and phone number changes separately.
-4. The code now correctly handles the case where certain phone numbers can be blank in the dataset.
+1. We use the `.isNotNull()` method to check if the previous contact information is not null before comparing it to the current contact information, which avoids false positives for blank or null values.
+2. The code now correctly handles the case where certain contact information fields can be blank or null in the dataset.
