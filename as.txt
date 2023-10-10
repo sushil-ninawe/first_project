@@ -1,30 +1,50 @@
-You can achieve this using PySpark as well. Here's how you can create a fifth column with a set of all phone numbers using PySpark:
+To find employees who have changed their phone numbers in the last 5 days using PySpark, you can use the following recipe. In this recipe, we will assume that you have a DataFrame named `employee_data` containing the employee details, and it has the columns `emp-id`, `phn-cell`, `phn-home`, `phn-mob`, `phn-ofc-1`, `phn-ofc-2`, `email-1`, `email-2`, `date-start`, and `date-end`.
+
+First, you need to filter the data for changes within the last 5 days and then compare the new and previous phone numbers to find unique changes using sets.
 
 ```python
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import udf
-from pyspark.sql.types import ArrayType, StringType
+from pyspark.sql.window import Window
+from pyspark.sql.functions import collect_list, lit, array_except, size, unix_timestamp
 
-# Initialize a Spark session
-spark = SparkSession.builder.appName("PhoneNumbers").getOrCreate()
+# Initialize Spark session
+spark = SparkSession.builder.appName("PhoneChangeAnalysis").getOrCreate()
 
-# Sample DataFrame
-data = [(1, "123-456-7890", "987-654-3210", "555-555-5555"),
-        (2, "111-222-3333", "444-555-6666", "777-888-9999")]
-columns = ["emp-id", "phn1", "phn2", "phn3"]
-df = spark.createDataFrame(data, columns)
+# Assuming you have a DataFrame named employee_data
+# Replace 'employee_data' with your actual DataFrame name
 
-# Define a UDF to create a set of all phone numbers
-def create_phone_set(phn1, phn2, phn3):
-    return set([phn1, phn2, phn3])
+# Filter the data for changes in the last 5 days
+window_spec = Window.partitionBy("emp-id").orderBy("date-start")
 
-udf_create_phone_set = udf(create_phone_set, ArrayType(StringType()))
+employee_data = employee_data.withColumn(
+    "date-start", unix_timestamp("date-start", "yyyy-MM-dd").cast("timestamp")
+)
 
-# Add a new column 'all_phones' with the set of all phone numbers
-df = df.withColumn("all_phones", udf_create_phone_set(df["phn1"], df["phn2"], df["phn3"]))
+employee_data = employee_data.filter(
+    (employee_data["date-start"] >= (current_date() - lit(5))) &
+    (employee_data["date-start"] <= current_date())
+)
 
-# Show the DataFrame with the new column
-df.show()
+# Collect previous phone numbers into an array
+phone_columns = ["phn-cell", "phn-home", "phn-mob", "phn-ofc-1", "phn-ofc-2"]
+employee_data = employee_data.withColumn(
+    "prev_phones", collect_list("phn").over(window_spec)
+)
+
+# Calculate the number of unique changes in phone numbers
+employee_data = employee_data.withColumn(
+    "unique_changes",
+    size(array_except(employee_data["prev_phones"], phone_columns))
+)
+
+# Filter employees with unique phone number changes
+changed_employees = employee_data.filter(employee_data["unique_changes"] > 0)
+
+# Show the results
+changed_employees.select("emp-id").distinct().show()
+
+# Stop the Spark session
+spark.stop()
 ```
 
-This code initializes a PySpark session, defines a User-Defined Function (UDF) to create a set of all phone numbers, and then adds a new column 'all_phones' to the DataFrame using the UDF. The result will be a DataFrame with the desired fifth column containing sets of phone numbers.
+This code first filters the data for changes within the last 5 days, collects previous phone numbers into an array using a window function, and then calculates the number of unique changes in phone numbers for each employee. Finally, it filters employees who have made unique phone number changes and displays their `emp-id`.
