@@ -1,50 +1,40 @@
-To find employees who have changed their phone numbers in the last 5 days using PySpark, you can use the following recipe. In this recipe, we will assume that you have a DataFrame named `employee_data` containing the employee details, and it has the columns `emp-id`, `phn-cell`, `phn-home`, `phn-mob`, `phn-ofc-1`, `phn-ofc-2`, `email-1`, `email-2`, `date-start`, and `date-end`.
-
-First, you need to filter the data for changes within the last 5 days and then compare the new and previous phone numbers to find unique changes using sets.
+If all the hobbies are in a single row for each student, you can modify the PySpark recipe to split the hobbies into separate columns and then find the commonality. Here's how you can do that:
 
 ```python
 from pyspark.sql import SparkSession
-from pyspark.sql.window import Window
-from pyspark.sql.functions import collect_list, lit, array_except, size, unix_timestamp
+from pyspark.sql.functions import split
 
-# Initialize Spark session
-spark = SparkSession.builder.appName("PhoneChangeAnalysis").getOrCreate()
+# Create a Spark session
+spark = SparkSession.builder.appName("HobbyIntersection").getOrCreate()
 
-# Assuming you have a DataFrame named employee_data
-# Replace 'employee_data' with your actual DataFrame name
+# Sample dataset (replace this with your actual dataset)
+data = [("Student1", "New Hobby1, New Hobby2, New Hobby3", "Old Hobby1, Old Hobby2"),
+        ("Student2", "New Hobby3, New Hobby4", "Old Hobby3, Old Hobby1"),
+        ("Student3", "New Hobby1, New Hobby5", "Old Hobby2, Old Hobby4")]
 
-# Filter the data for changes in the last 5 days
-window_spec = Window.partitionBy("emp-id").orderBy("date-start")
+# Define the schema for the dataset
+schema = ["Student", "NewHobbies", "OldHobbies"]
 
-employee_data = employee_data.withColumn(
-    "date-start", unix_timestamp("date-start", "yyyy-MM-dd").cast("timestamp")
-)
+# Create a DataFrame from the sample data
+df = spark.createDataFrame(data, schema=schema)
 
-employee_data = employee_data.filter(
-    (employee_data["date-start"] >= (current_date() - lit(5))) &
-    (employee_data["date-start"] <= current_date())
-)
+# Split the comma-separated hobbies into arrays
+df = df.withColumn("NewHobbies", split(col("NewHobbies"), ", "))
+df = df.withColumn("OldHobbies", split(col("OldHobbies"), ", "))
 
-# Collect previous phone numbers into an array
-phone_columns = ["phn-cell", "phn-home", "phn-mob", "phn-ofc-1", "phn-ofc-2"]
-employee_data = employee_data.withColumn(
-    "prev_phones", collect_list("phn").over(window_spec)
-)
+# Calculate the intersection of new and old hobbies
+df = df.withColumn("CommonHobbies", array_intersect(col("NewHobbies"), col("OldHobbies")))
 
-# Calculate the number of unique changes in phone numbers
-employee_data = employee_data.withColumn(
-    "unique_changes",
-    size(array_except(employee_data["prev_phones"], phone_columns))
-)
-
-# Filter employees with unique phone number changes
-changed_employees = employee_data.filter(employee_data["unique_changes"] > 0)
-
-# Show the results
-changed_employees.select("emp-id").distinct().show()
+# Show the result
+df.show(truncate=False)
 
 # Stop the Spark session
 spark.stop()
 ```
 
-This code first filters the data for changes within the last 5 days, collects previous phone numbers into an array using a window function, and then calculates the number of unique changes in phone numbers for each employee. Finally, it filters employees who have made unique phone number changes and displays their `emp-id`.
+In this modified code:
+- We split the comma-separated hobby strings into arrays using `split`.
+- Then, we calculate the intersection of the arrays of new and old hobbies using `array_intersect`.
+- The result DataFrame will contain the common hobbies for each student, even when all hobbies are in a single row.
+
+Again, replace the sample dataset with your actual data in your PySpark environment.
