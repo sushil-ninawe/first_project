@@ -1,26 +1,51 @@
-In Hive, you can achieve this by using a combination of the `SELECT` statement along with the `LEFT JOIN` and `CASE` clauses. Here's an example query to check if two tables (`table1` and `table2`) are exactly the same:
+Various features can be extracted from audio data for analysis, including both spectral and temporal characteristics. Here are some common audio features with brief explanations:
 
-```sql
-SELECT COUNT(*) AS row_count_diff
-FROM (
-    SELECT * FROM table1
-    UNION ALL
-    SELECT * FROM table2
-) combined
-LEFT JOIN table1 t1 ON combined.column1 = t1.column1
-                     AND combined.column2 = t1.column2
-                     -- Add more columns as needed
-LEFT JOIN table2 t2 ON combined.column1 = t2.column1
-                     AND combined.column2 = t2.column2
-                     -- Add more columns as needed
-WHERE t1.column1 IS NULL OR t2.column1 IS NULL;
-```
+1. **Mel-Frequency Cepstral Coefficients (MFCCs):**
+   - MFCCs are a representation of the short-term power spectrum of a sound signal. They are widely used for speech and audio analysis.
 
-In this query:
-- We combine the rows from both tables using `UNION ALL`.
-- We then perform left joins on both `table1` and `table2` based on the columns that uniquely identify rows (you need to replace `column1`, `column2`, etc. with the actual column names you want to use).
-- If a row exists in one table but not in the other, the corresponding joined table's columns will be `NULL`.
-- The `WHERE` clause filters out rows where any of the joined table's columns are `NULL`.
-- Finally, the query returns the count of differing rows. If the count is 0, the tables are exactly the same.
+2. **Spectrogram:**
+   - A visual representation of how the frequencies in an audio signal change over time. It's useful for detecting patterns and changes in audio.
 
-Keep in mind that this query assumes the two tables have the same structure and column names. Adjust the column names accordingly based on your table's schema.
+3. **Chroma Feature:**
+   - Chroma features describe the energy distribution of pitch classes (e.g., C, C#, D) in an audio signal. They are often used in music analysis.
+
+4. **Pitch and Fundamental Frequency (F0):**
+   - Pitch features describe the perceived pitch of a sound. F0 is the lowest frequency component in a sound and is important in speech analysis.
+
+5. **Zero Crossing Rate:**
+   - The rate at which the audio signal changes sign (crosses zero). It can be an indicator of noisiness or percussiveness.
+
+6. **Spectral Centroid:**
+   - A measure of the "center of mass" of the spectrum. It provides information about the brightness of a sound.
+
+7. **Spectral Bandwidth:**
+   - Describes the width of the spectral content of the audio. A wider bandwidth indicates a broader range of frequencies.
+
+8. **Spectral Contrast:**
+   - Measures the difference in amplitude between peaks and valleys in a spectrogram. Useful for distinguishing between harmonic and percussive sounds.
+
+9. **Spectral Roll-Off:**
+   - The frequency below which a specified percentage of the total spectral energy lies. It can indicate the noisiness of an audio signal.
+
+10. **Rhythm Features:**
+    - Features related to the tempo and rhythm of audio, including beat and tempo analysis.
+
+11. **Zero-Mean Normalized Cross-Correlation (ZNCC):**
+    - A measure of similarity between two audio signals. It can be used for audio alignment and matching.
+
+12. **Harmonic-to-Noise Ratio (HNR):**
+    - Measures the ratio of harmonic (pitched) components to non-harmonic (noise) components in an audio signal.
+
+13. **Energy and RMS:**
+    - Energy represents the total signal energy, while Root Mean Square (RMS) is a measure of the signal's amplitude.
+
+14. **Formants:**
+    - Peaks in the audio spectrum that correspond to the resonance frequencies of the vocal tract. They are important for speech analysis.
+
+15. **Slope and Intercept of Linear Regression of Spectrum:**
+    - Describes the trend or linearity of the spectral content in the audio signal.
+
+16. **Time Domain Features:**
+    - Features related to the signal in the time domain, such as mean, standard deviation, skewness, kurtosis, and more.
+
+These features can be extracted from audio data using various signal processing and audio analysis libraries in programming languages like Python (e.g., librosa, scipy, numpy). Depending on the specific analysis or application, you may choose a subset of these features or engineer new ones to suit your needs. Different features are suitable for different tasks, such as speech recognition, music analysis, or fraud detection, and can provide valuable information for a wide range of audio-based applications.
