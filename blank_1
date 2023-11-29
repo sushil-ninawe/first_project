@@ -1,21 +1,13 @@
+Certainly! You can achieve the equivalent using pandas operations. Assuming you have two DataFrames named `emp_df` and `terminated_emp_df`, you can use the `merge` function to perform the equivalent of the SQL query. Here's an example:
 
-import datetime
-import pytz
+```python
+import pandas as pd
 
-# Define the time and days for the trigger
-trigger_time = datetime.time(22, 0)  # 22:00 EST
-trigger_days = [1, 2, 3, 4, 5]  # Tuesday, Wednesday, Thursday, Friday, Saturday (0=Monday, 1=Tuesday, etc.)
+# Assuming you have DataFrames emp_df and terminated_emp_df
+result_df = emp_df.merge(terminated_emp_df[['emp_id']], on='emp_id', how='left', indicator=True)
+filtered_df = result_df[result_df['_merge'] == 'left_only'].drop(columns=['_merge'])
 
-# Get the current time in the EST time zone
-est = pytz.timezone('US/Eastern')
-current_time = datetime.datetime.now(est).time()
-current_day = datetime.datetime.now(est).weekday()  # 0=Monday, 1=Tuesday, etc.
+# Now filtered_df contains the result you're looking for
+```
 
-# Check if the current day and time match the trigger conditions
-if current_day in trigger_days and current_time == trigger_time:
-    # Trigger the scenario
-    print("Triggering scenario...")
-    # Add your code here to trigger the Dataiku scenario
-
-# If you want to trigger the scenario, you'll need to call the Dataiku API to trigger it programmatically. 
-# You can use the Dataiku Python API to do this.
+This code snippet merges the two DataFrames on the 'emp_id' column, includes an indicator column '_merge' to identify the source of each row, and then filters only the rows where the indicator is 'left_only', indicating that the 'emp_id' is not in the 'terminated_emp_df'.
