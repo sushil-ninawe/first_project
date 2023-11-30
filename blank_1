@@ -11,3 +11,23 @@ filtered_df = result_df[result_df['_merge'] == 'left_only'].drop(columns=['_merg
 ```
 
 This code snippet merges the two DataFrames on the 'emp_id' column, includes an indicator column '_merge' to identify the source of each row, and then filters only the rows where the indicator is 'left_only', indicating that the 'emp_id' is not in the 'terminated_emp_df'.
+
+
+
+
+
+
+Certainly! You can convert the given SQL query to Pandas operations using the `pandas` library. Assuming you have a DataFrame named `df`:
+
+```python
+import pandas as pd
+
+# Assuming 'df' is your DataFrame
+result_df = (df.assign(rower=df.sort_values('date', ascending=False)
+                       .groupby('age')
+                       .cumcount() + 1)
+             .query('rower == 1')
+             .drop(columns='rower'))
+```
+
+This Pandas code replicates the logic of the SQL query, creating a new column 'rower' based on the specified conditions and then filtering the DataFrame where 'rower' equals 1. Adjust the column names and DataFrame as needed.
