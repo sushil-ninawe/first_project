@@ -1,2 +1,32 @@
 
  mfcc_df = pd.DataFrame(mfcc_data.tolist(), columns=[f'mfcc_{i}' for i in range(1, num_mfcc + 1)])
+
+
+import pandas as pd
+from fuzzywuzzy import fuzz
+from fuzzywuzzy import process
+
+# Sample data for demonstration
+data1 = {'emp_id': [1, 2, 3],
+         'full_name': ['John Doe', 'Jane Smith', 'Bob Johnson']}
+data2 = {'txn_id': [101, 102, 103],
+         'full_name': ['Jhon Doe', 'Alice Brown', 'Bb Jhonsen']}
+
+df_employee = pd.DataFrame(data1)
+df_transaction = pd.DataFrame(data2)
+
+# Define a function to calculate the fuzz ratio between two names
+def calculate_fuzz_ratio(name1, name2):
+    return fuzz.ratio(name1, name2)
+
+# Apply the function to calculate the fuzz ratio for each combination of names
+df_transaction['fuzz_ratio'] = df_transaction['full_name'].apply(lambda x: process.extractOne(x, df_employee['full_name'], scorer=calculate_fuzz_ratio)[1])
+
+# Set a threshold for the fuzz ratio to consider a match
+threshold = 80  # You can adjust this threshold based on your requirements
+
+# Filter the transactions based on the fuzz ratio threshold
+matched_transactions = df_transaction[df_transaction['fuzz_ratio'] >= threshold]
+
+# Display the resulting dataframe with transactions belonging to employees only
+print(matched_transactions[['txn_id', 'full_name']])
