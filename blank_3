@@ -1,1 +1,49 @@
 
+from fuzzywuzzy import fuzz
+
+def load_data(file_path):
+    with open(file_path, 'r') as file:
+        return [line.strip() for line in file]
+
+def find_matching_employee(transaction_name, employee_names):
+    best_match = None
+    max_similarity = 0
+
+    for employee_name in employee_names:
+        similarity = fuzz.ratio(transaction_name, employee_name)
+        if similarity > max_similarity:
+            max_similarity = similarity
+            best_match = employee_name
+
+    return best_match if max_similarity >= 80 else None  # Adjust the similarity threshold as needed
+
+def detect_fraud(client_transactions, employee_names):
+    potential_fraud = []
+
+    for transaction in client_transactions:
+        counter_party_name = transaction['counter_party_full_name']
+        matching_employee = find_matching_employee(counter_party_name, employee_names)
+
+        if matching_employee:
+            potential_fraud.append({
+                'client_transaction': transaction,
+                'matching_employee': matching_employee
+            })
+
+    return potential_fraud
+
+if __name__ == "__main__":
+    # Load employee and client transaction data
+    employees = load_data('employee.txt')  # Replace 'employee.txt' with the actual file path
+    client_transactions = load_data('client_transactions.txt')  # Replace 'client_transactions.txt'
+
+    # Detect potential fraud using fuzzy matching
+    potential_fraud_data = detect_fraud(client_transactions, employees)
+
+    # Print or handle potential fraud data
+    if potential_fraud_data:
+        print("Potential fraud transactions:")
+        for data in potential_fraud_data:
+            print(f"Transaction: {data['client_transaction']}, Matching Employee: {data['matching_employee']}")
+    else:
+        print("No potential fraud detected.")
