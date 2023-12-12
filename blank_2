@@ -139,3 +139,51 @@ def load_data(file_paths, labels):
 ```
 
 Adapting the model training and evaluation functions may also be necessary depending on the changes made to the feature set.gy
+
+
+
+
+
+
+
+
+fuzzy
+Certainly! You can use the `fuzzywuzzy` library in Python to perform fuzzy matching between transaction names and employee names. First, you need to install the library if you haven't already:
+
+```bash
+pip install fuzzywuzzy
+```
+
+Here's an example code snippet on how you can perform fuzzy matching and filter transactions based on a threshold:
+
+```python
+from fuzzywuzzy import fuzz
+
+# Assuming emp_dict is your employee dictionary with emp_full_name as keys
+# and tran_df is your transaction DataFrame with tran_full_name column
+
+emp_dict = {'emp_id1': 'John Doe', 'emp_id2': 'Jane Smith', 'emp_id3': 'Bob Johnson'}
+
+# Assuming tran_df is a DataFrame with 'tran_id' and 'tran_full_name' columns
+tran_df = pd.DataFrame({'tran_id': [1, 2, 3], 'tran_full_name': ['John D', 'Jane S', 'Bob J']})
+
+# Set the threshold for fuzzy matching
+threshold = 70
+
+# Function to find matching employee for a transaction
+def find_matching_employee(tran_name):
+    matches = [(emp_name, fuzz.ratio(tran_name, emp_name)) for emp_name in emp_dict.values()]
+    matches_above_threshold = [match[0] for match in matches if match[1] >= threshold]
+    return matches_above_threshold
+
+# Apply the function to the transaction DataFrame
+tran_df['matching_employees'] = tran_df['tran_full_name'].apply(find_matching_employee)
+
+# Filter transactions with at least one matching employee
+matched_transactions = tran_df[tran_df['matching_employees'].apply(lambda x: len(x) > 0)]
+
+# Display the result
+print(matched_transactions)
+```
+
+This code calculates the fuzzy ratio between each transaction name and employee name and includes transactions in the result DataFrame if at least one employee name has a fuzzy ratio greater than or equal to the specified threshold. Adjust the `emp_dict` and `tran_df` accordingly based on your actual data.
