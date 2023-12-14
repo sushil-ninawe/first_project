@@ -69,6 +69,13 @@ for index, row in df_employee.iterrows():
     employee_name_map[key].append(row['emp_id'])
 
 
+--------
+
+
+def get_emp_ids(full_name):
+    return employee_name_map.get(full_name, [])
+
+
 
 ____________
 explode
