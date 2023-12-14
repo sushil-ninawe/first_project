@@ -47,3 +47,41 @@ if __name__ == "__main__":
             print(f"Transaction: {data['client_transaction']}, Matching Employee: {data['matching_employee']}")
     else:
         print("No potential fraud detected.")
+
+
+
+
+
+
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+this is a new section for multi emp under same name 
+
+employee_name_map = {}
+for index, row in df_employee.iterrows():
+    key = row['full_name']
+    if key not in employee_name_map:
+        employee_name_map[key] = []
+    employee_name_map[key].append(row['emp_id'])
+
+
+
+____________
+explode
+
+# Apply the function to create a new column 'emp_ids' in the transaction dataframe
+df_transaction['emp_ids'] = df_transaction['full_name'].apply(get_emp_ids)
+
+# Explode the dataframe to create separate rows for each matched employee
+df_transaction_exploded = df_transaction.explode('emp_ids')
+
+# Merge with employee details to get additional information
+result_df = pd.merge(df_transaction_exploded, df_employee, left_on='emp_ids', right_on='emp_id', how='left')
+
+# Display the result
+print(result_df[['txn_id', 'full_name_x', 'emp_ids', 'emp_id', 'full_name_y']])
+
