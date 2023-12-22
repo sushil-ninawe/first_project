@@ -38,5 +38,17 @@ print(matched_transactions[['txn_id', 'full_name']])
 
 
 # pivot table logic 
+# Group by 'emp_id' and 'access_type' and aggregate access numbers into a list
+result_df = df.groupby(['emp_id', 'access_type'])['access_number'].agg(list).reset_index()
+
 # Pivot the DataFrame to create separate columns for each access_type
-result_df = df.pivot_table(index='emp_id', columns='access_type', values='access_number', aggfunc=list, fill_value=[]).reset_index()
+result_df = result_df.pivot(index='emp_id', columns='access_type', values='access_number').reset_index()
+
+# Rename the columns if needed
+result_df.columns = ['emp_id', 'access_number_DIV', 'access_number_FA']
+
+# Fill NaN values with empty lists
+result_df = result_df.fillna([])
+
+# Print the result
+print(result_df)
