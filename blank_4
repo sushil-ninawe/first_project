@@ -30,3 +30,13 @@ matched_transactions = df_transaction[df_transaction['fuzz_ratio'] >= threshold]
 
 # Display the resulting dataframe with transactions belonging to employees only
 print(matched_transactions[['txn_id', 'full_name']])
+
+
+
+
+
+
+
+# pivot table logic 
+# Pivot the DataFrame to create separate columns for each access_type
+result_df = df.pivot_table(index='emp_id', columns='access_type', values='access_number', aggfunc=list, fill_value=[]).reset_index()
