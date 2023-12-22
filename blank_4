@@ -38,14 +38,18 @@ print(matched_transactions[['txn_id', 'full_name']])
 
 
 # pivot table logic 
-# Group by 'emp_id' and 'access_type' and aggregate access numbers into a list
-result_df = df.groupby(['emp_id', 'access_type'])['access_number'].agg(list).reset_index()
+# Group by 'emp_id' and 'access_type', concatenate access numbers into a string
+result_df = df.groupby(['emp_id', 'access_type'])['access_number'].agg(lambda x: ' '.join(x)).reset_index()
 
 # Pivot the DataFrame to create separate columns for each access_type
 result_df = result_df.pivot(index='emp_id', columns='access_type', values='access_number').reset_index()
 
 # Rename the columns if needed
 result_df.columns = ['emp_id', 'access_number_DIV', 'access_number_FA']
+
+# Split the concatenated strings back into lists
+result_df['access_number_DIV'] = result_df['access_number_DIV'].str.split()
+result_df['access_number_FA'] = result_df['access_number_FA'].str.split()
 
 # Fill NaN values with empty lists
 result_df = result_df.fillna([])
