@@ -187,3 +187,11 @@ print(matched_transactions)
 ```
 
 This code calculates the fuzzy ratio between each transaction name and employee name and includes transactions in the result DataFrame if at least one employee name has a fuzzy ratio greater than or equal to the specified threshold. Adjust the `emp_dict` and `tran_df` accordingly based on your actual data.
+
+
+
+
+
+
+# Flatten the multi-index columns into a single-level index
+pivot_table_reset.columns = ['{}_{}'.format(col[0], col[1]) for col in pivot_table_reset.columns]
