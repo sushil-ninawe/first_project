@@ -195,3 +195,25 @@ This code calculates the fuzzy ratio between each transaction name and employee 
 
 # Flatten the multi-index columns into a single-level index
 pivot_table_reset.columns = ['{}_{}'.format(col[0], col[1]) for col in pivot_table_reset.columns]
+
+
+
+
+
+
+
+
+import pandas as pd
+
+# Sample data
+data = {'client_prod_num': [101, 202, 303],
+        'emp_prod_num': [[101, 102, 103], [201, 202, 203], [301, 302, 303]]}
+
+# Creating DataFrame
+df = pd.DataFrame(data)
+
+# Creating the 'flag' column
+df['flag'] = df.apply(lambda row: 1 if row['client_prod_num'] in row['emp_prod_num'] else 0, axis=1)
+
+# Displaying the DataFrame
+print(df)
