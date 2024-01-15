@@ -92,3 +92,42 @@ result_df = pd.merge(df_transaction_exploded, df_employee, left_on='emp_ids', ri
 # Display the result
 print(result_df[['txn_id', 'full_name_x', 'emp_ids', 'emp_id', 'full_name_y']])
 
+
+
+
+
+-----------------------
+
+fname match mulit return using series 
+
+
+import pandas as pd
+
+def add_match_values(row, fname_dict, mname_dict, lname_dict):
+    # Add columns for first_name match_value, mid_name match_value, and last_name match_value
+    return pd.Series([
+        fname_dict.get(row['first_name'], None),
+        mname_dict.get(row['mid_name'], None),
+        lname_dict.get(row['last_name'], None)
+    ], index=['first_name_match_value', 'mname_match_value', 'lname_match_value'])
+
+# Example usage:
+# Assuming you have a DataFrame named 'my_dataframe' with columns first_name, mid_name, and last_name
+# and dictionaries fname_dict, mname_dict, and lname_dict
+
+my_dataframe = pd.DataFrame({
+    'first_name': ['John', 'Alice', 'Bob'],
+    'mid_name': ['Doe', 'Mae', 'E'],
+    'last_name': ['Smith', 'Johnson', 'Lee']
+})
+
+fname_dict = {'John': 1, 'Alice': 2, 'Bob': 3}
+mname_dict = {'Doe': 4, 'Mae': 5, 'E': 6}
+lname_dict = {'Smith': 7, 'Johnson': 8, 'Lee': 9}
+
+# Apply the function to each row
+result_dataframe = my_dataframe.apply(lambda row: add_match_values(row, fname_dict, mname_dict, lname_dict), axis=1)
+
+print(pd.concat([my_dataframe, result_dataframe], axis=1))
+
+
