@@ -56,3 +56,12 @@ result_df = result_df.fillna([])
 
 # Print the result
 print(result_df)
+
+
+
+## jacarrd similarity 
+
+
+SELECT
+    size(intersect(collect_set(tokenize('kitten')), collect_set(tokenize('sitting')))) /
+    size(union(collect_set(tokenize('kitten')), collect_set(tokenize('sitting')))) AS jaccard_similarity;
