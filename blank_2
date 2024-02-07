@@ -1,4 +1,4 @@
-Certainly! To create a basic machine learning Python script for audio classification using the `librosa` library, you can follow these steps:
+jiCertainly! To create a basic machine learning Python script for audio classification using the `librosa` library, you can follow these steps:
 
 1. **Install Required Libraries:**
    Make sure you have the necessary libraries installed. You can install them using:
@@ -217,3 +217,31 @@ df['flag'] = df.apply(lambda row: 1 if row['client_prod_num'] in row['emp_prod_n
 
 # Displaying the DataFrame
 print(df)
+
+
+
+
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import trim, upper
+
+# Create a SparkSession
+spark = SparkSession.builder \
+    .appName("Hive to PySpark") \
+    .getOrCreate()
+
+# Load your table into a DataFrame
+df = spark.read.table("your_table_name")
+
+# Filter the DataFrame
+filtered_df = df.filter(
+    (
+        (trim(upper(df["cde_tx"])).isin("ABC", "XYZ", "LMN")) 
+        or 
+        (trim(upper(df["cdr_tb"])).isin("FFR"))
+    ) 
+    and 
+    (~df["typ_tran"].isin("DVU"))
+)
+
+# Show the filtered DataFrame
+filtered_df.show()
