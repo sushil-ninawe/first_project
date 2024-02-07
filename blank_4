@@ -65,3 +65,17 @@ print(result_df)
 SELECT
     size(intersect(collect_set(tokenize('kitten')), collect_set(tokenize('sitting')))) /
     size(union(collect_set(tokenize('kitten')), collect_set(tokenize('sitting')))) AS jaccard_similarity;
+
+
+
+# Define the string variable
+my_string = "This is a sample string."
+
+# Define the file path
+file_path = "/path/to/save/file.txt"
+
+# Open the file in write mode and write the string variable to it
+with open(file_path, "w") as file:
+    file.write(my_string)
+
+print("String saved to file successfully.")
