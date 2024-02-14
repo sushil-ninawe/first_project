@@ -58,4 +58,35 @@ flattened
 import pandas as pd
 
 # Assuming your DataFrame is named df
-df['flattened_list'] = df['office list'].apply(lambda x: [item for sublist in x for item in sublist] if isinstance(x, list) and any(isinstance(i, list) for i in x) else x)
+df['flattened_list'] = df['office list'].apply(lambda x: [item for sublist in x for item in sublist] if isinstance(x, list) and any(isinstance(i, list) for i in x) els
+
+
+
+
+
+
+
+import pandas as pd
+
+# Your DataFrame
+data = {
+    'trans_id': [1, 2, 3],
+    'office_list': [['A', 'B', 'C'], [['D']], [['E', 'F'], ['G', 'H']]],
+}
+
+df = pd.DataFrame(data)
+
+# Define a function to flatten the lists
+def flatten_list(lst):
+    flat_list = []
+    for item in lst:
+        if isinstance(item, list):
+            flat_list.extend(item)
+        else:
+            flat_list.append(item)
+    return flat_list
+
+# Apply the function to flatten the lists in 'office_list'
+df['flattened_list'] = df['office_list'].apply(flatten_list)
+
+print(df)
