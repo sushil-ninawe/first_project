@@ -1,4 +1,4 @@
-Certainly! You can achieve the equivalent using pandas operations. Assuming you have two DataFrames named `emp_df` and `terminated_emp_df`, you can use the `merge` function to perform the equivalent of the SQL query. Here's an example:
+yaCertainly! You can achieve the equivalent using pandas operations. Assuming you have two DataFrames named `emp_df` and `terminated_emp_df`, you can use the `merge` function to perform the equivalent of the SQL query. Here's an example:
 
 ```python
 import pandas as pd
@@ -31,3 +31,21 @@ result_df = (df.assign(rower=df.sort_values('date', ascending=False)
 ```
 
 This Pandas code replicates the logic of the SQL query, creating a new column 'rower' based on the specified conditions and then filtering the DataFrame where 'rower' equals 1. Adjust the column names and DataFrame as needed.
+
+
+
+
+
+import pandas as pd
+
+# Example DataFrame with a column containing lists
+df = pd.DataFrame({'col_with_lists': [[1, 2, 3], [4, 5], [6, 7, 8, 9]]})
+
+# Explode the column containing lists
+exploded_df = df['col_with_lists'].apply(pd.Series).stack().reset_index(level=1, drop=True).rename('col_with_lists')
+
+# Reset index if needed
+exploded_df.reset_index(drop=True, inplace=True)
+
+# Display the exploded DataFrame
+print(exploded_df)
