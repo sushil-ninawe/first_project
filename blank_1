@@ -49,3 +49,13 @@ exploded_df.reset_index(drop=True, inplace=True)
 
 # Display the exploded DataFrame
 print(exploded_df)
+
+
+
+
+flattened
+
+import pandas as pd
+
+# Assuming your DataFrame is named df
+df['flattened_list'] = df['office list'].apply(lambda x: [item for sublist in x for item in sublist] if isinstance(x, list) and any(isinstance(i, list) for i in x) else x)
