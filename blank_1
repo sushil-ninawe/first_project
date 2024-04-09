@@ -90,3 +90,34 @@ def flatten_list(lst):
 df['flattened_list'] = df['office_list'].apply(flatten_list)
 
 print(df)
+
+
+
+
+
+
+
+SpeechBrain currently supports many conversational AI technologies, including:
+
+- Speech Recognition
+- Speaker Recognition
+- Speech Separation
+- Speech Enhancement
+- Text-to-Speech
+- Vocoding
+- Spoken Language Understanding
+- Speech-to-Speech Translation
+- Speech Translation
+- Emotion Classification
+- Language Identification
+- Voice Activity Detection
+- Sound Classification
+- Self-Supervised Learning
+- Interpretabiliy
+- Speech Generation
+- Metric Learning
+- Allignment
+- Diarization
+- Language Modeling
+- Response Generation
+- Grapheme-to-Phoneme
