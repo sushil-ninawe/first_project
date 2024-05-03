@@ -122,3 +122,49 @@ Dependencies:
 
 Estimation:
 The estimation for completion of this story is subject to detailed analysis and may vary based on the complexity of data structures, access requirements, and approval processes. A preliminary estimate would be [provide an estimated timeframe].
+
+
+
+
+
+
+
+
+Subject: Request for Meeting to Discuss Access Activity Logs
+
+Dear [Recipient],
+
+I hope this email finds you well. We are currently facing a challenge regarding access activity logs and believe that a collaborative discussion will be beneficial in finding a solution. Below are the key points we'd like to address:
+
+- **Problem Statement**: 
+    - We are seeking access activity logs in the form of datasets/feeds to establish that an employee with suitable access levels has engaged in access activity within the past [x number of days].
+    - This will aid in reducing the volume of alerts by filtering based on activity logs.
+
+- **Current Situation**:
+    - The TOR team has assisted in identifying that the EBC team leverages TOR team's Access Level Data by querying the TOR database to verify access levels for employees.
+    - However, detailed information at the employee and application granularity is not available with the TOR team.
+
+- **Request for Collaboration**:
+    - We believe that the EBC team may have maintained access activity logs at the employee and application level, which could significantly assist in reducing alert volumes.
+    - We propose a meeting to discuss how we can leverage this data effectively to address our current challenge.
+
+- **Objective of the Meeting**:
+    - Understand the availability and structure of access activity logs maintained by the EBC team.
+    - Explore possibilities of integrating these logs into our alert filtering mechanism.
+    - Discuss any potential challenges or concerns regarding data access and privacy.
+
+- **Proposed Meeting Details**:
+    - Date: [Proposed Date]
+    - Time: [Proposed Time]
+    - Duration: [Estimated Duration]
+    - Location/Platform: [Physical Location or Virtual Meeting Platform]
+
+We appreciate your attention to this matter and look forward to a fruitful discussion that will benefit both teams. Please let us know your availability, and if the proposed meeting time works for you.
+
+Thank you for your cooperation.
+
+Warm regards,
+
+[Your Name]
+[Your Position]
+[Your Contact Information]
