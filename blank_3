@@ -1,4 +1,4 @@
-oo
+ohoo
 from fuzzywuzzy import fuzz
 
 def load_data(file_path):
@@ -254,3 +254,34 @@ As a developer, I want to implement background noise removal functionality using
 4. Conduct thorough testing to validate the effectiveness of the implemented noise removal feature across various scenarios and types of background noise.
 5. Provide clear documentation and instructions for using the noise removal feature within the application.
 6. Address any bugs or issues identified during testing and ensure that the feature meets the quality standards defined by the team.
+
+
+**Story 1: Research**
+
+**Title:** Investigate Feasibility of Speaker Enhancement and Separation using Speech Brain Library
+
+**Story:**
+As a member of the development team, I want to explore the feasibility of leveraging the capabilities of the Speech Brain library for speaker enhancement and speaker separation tasks, in order to improve the clarity and separation of multiple speakers in audio recordings.
+
+**Acceptance Criteria:**
+1. Research and document the existing methods and models within the Speech Brain library for speaker enhancement and separation.
+2. Evaluate the suitability of these methods/models for our specific use case, considering factors such as the number of speakers, noise levels, and recording conditions.
+3. Conduct experiments to assess the effectiveness of the selected methods/models in enhancing the speech of individual speakers and separating multiple speakers from mixed audio recordings.
+4. Document the findings, including any limitations or challenges encountered during the exploration phase.
+5. Present the research results to the team for discussion and decision-making regarding the next steps.
+
+**Story 2: Implementation**
+
+**Title:** Implement Speaker Enhancement and Separation using Speech Brain Library
+
+**Story:**
+As a developer, I want to implement speaker enhancement and separation functionality using the Speech Brain library, based on the findings from the research phase, in order to enhance the quality and intelligibility of audio recordings containing multiple speakers.
+
+**Acceptance Criteria:**
+1. Integrate the selected speaker enhancement and separation methods/models from the Speech Brain library into the application's audio processing pipeline.
+2. Ensure that the implementation supports the enhancement of individual speaker voices while minimizing interference from background noise and other speakers.
+3. Implement algorithms for accurately separating and isolating the voices of multiple speakers in mixed audio recordings.
+4. Optimize the implementation for efficiency and performance, considering factors such as processing time and resource utilization.
+5. Conduct thorough testing to validate the effectiveness of the implemented speaker enhancement and separation features across various scenarios and types of audio recordings.
+6. Provide clear documentation and instructions for using the speaker enhancement and separation features within the application.
+7. Address any bugs or issues identified during testing and ensure that the features meet the quality standards defined by the team.
