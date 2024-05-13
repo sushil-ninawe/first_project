@@ -1,4 +1,4 @@
-
+oo
 from fuzzywuzzy import fuzz
 
 def load_data(file_path):
@@ -219,3 +219,38 @@ Certainly, here's a draft description for the security architecture approval cas
    - Cost-effectiveness compared to potential financial losses from fraudulent activities.
 
 By implementing this comprehensive security architecture, our investment bank will significantly strengthen its fraud detection capabilities, thereby mitigating risks and enhancing trust among clients and stakeholders.
+
+
+
+
+
+
+
+**Story 1: Exploration**
+
+**Title:** Investigate Feasibility of Background Noise Removal using Speech Brain Library
+
+**Story:**
+As a member of the development team, I want to explore the feasibility of utilizing the Speech Brain library to remove background noise from audio clips, in order to improve the quality of audio recordings.
+
+**Acceptance Criteria:**
+1. Research and document the capabilities of the Speech Brain library for noise removal.
+2. Identify the suitable methods or models within the Speech Brain library that can be used for noise removal.
+3. Conduct experiments to assess the effectiveness of the selected methods/models in removing various types of background noise from audio clips.
+4. Document the findings, including any limitations or challenges encountered during the exploration phase.
+5. Present the exploration results to the team for discussion and decision-making regarding the next steps.
+
+**Story 2: Implementation**
+
+**Title:** Implement Background Noise Removal using Speech Brain Library
+
+**Story:**
+As a developer, I want to implement background noise removal functionality using the Speech Brain library, based on the findings from the exploration phase, in order to enhance the quality of audio clips processed by our application.
+
+**Acceptance Criteria:**
+1. Integrate the selected noise removal method/model from the Speech Brain library into the application's audio processing pipeline.
+2. Ensure that the implementation is compatible with different audio file formats commonly used by our users.
+3. Optimize the implementation for efficiency and performance, considering factors such as processing time and resource utilization.
+4. Conduct thorough testing to validate the effectiveness of the implemented noise removal feature across various scenarios and types of background noise.
+5. Provide clear documentation and instructions for using the noise removal feature within the application.
+6. Address any bugs or issues identified during testing and ensure that the feature meets the quality standards defined by the team.
