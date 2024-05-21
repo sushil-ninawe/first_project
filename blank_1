@@ -1,4 +1,4 @@
-yaCertainly! You can achieve the equivalent using pandas operations. Assuming you have two DataFrames named `emp_df` and `terminated_emp_df`, you can use the `merge` function to perform the equivalent of the SQL query. Here's an example:
+ohyaCertainly! You can achieve the equivalent using pandas operations. Assuming you have two DataFrames named `emp_df` and `terminated_emp_df`, you can use the `merge` function to perform the equivalent of the SQL query. Here's an example:
 
 ```python
 import pandas as pd
@@ -161,3 +161,107 @@ Etrade users identified accurately.
 Code implementation tested and integrated into data workflows.
 Volumetric stats collated and ready for presentation.
 Documentation updated with analysis methodology and findings.
+
+
+
+
+To monitor a model using the Iris dataset and capture Population Stability Index (PSI) with Evidently AI, while utilizing the Evidently UI for logging, follow these steps:
+
+### Step 1: Setting Up the Environment
+Ensure you have Python installed along with necessary libraries. You can install the required packages using pip:
+```bash
+pip install pandas scikit-learn evidently
+```
+
+### Step 2: Prepare the Iris Dataset
+Load the Iris dataset from `scikit-learn` and split it into training and test sets.
+```python
+import pandas as pd
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+
+# Load dataset
+data = load_iris()
+df = pd.DataFrame(data.data, columns=data.feature_names)
+df['target'] = data.target
+
+# Split dataset
+train_df, test_df = train_test_split(df, test_size=0.3, random_state=42)
+```
+
+### Step 3: Train a Model
+Train a simple model, such as a Decision Tree classifier.
+```python
+from sklearn.tree import DecisionTreeClassifier
+
+# Train the model
+model = DecisionTreeClassifier(random_state=42)
+model.fit(train_df.drop(columns=['target']), train_df['target'])
+```
+
+### Step 4: Make Predictions
+Generate predictions for the test set.
+```python
+test_df['predictions'] = model.predict(test_df.drop(columns=['target']))
+```
+
+### Step 5: Setup Evidently for Monitoring
+Create an Evidently monitor to capture PSI and use the Evidently UI for logging.
+
+#### Step 5.1: Create a Report
+First, create a report to capture PSI using Evidently.
+```python
+from evidently.report import Report
+from evidently.metrics import DataDriftTable
+
+# Create a report
+report = Report(metrics=[
+    DataDriftTable()
+])
+
+# Run the report
+report.run(reference_data=train_df, current_data=test_df)
+report.save_html('data_drift_report.html')
+```
+
+#### Step 5.2: Monitor with Evidently
+Configure Evidently for continuous monitoring using the Evidently UI.
+```python
+from evidently.dashboard import Dashboard
+from evidently.tabs import DataDriftTab
+
+# Create a dashboard
+dashboard = Dashboard(tabs=[DataDriftTab()])
+dashboard.calculate(reference_data=train_df, current_data=test_df)
+dashboard.show()
+```
+
+### Step 6: Use Evidently UI for Logging
+To log the monitoring results in an Evidently UI dashboard:
+1. Create a directory to store your logs.
+2. Set up Evidently to periodically write monitoring results to this directory.
+
+Here's an example of setting up a basic logging mechanism:
+```python
+import os
+import time
+
+# Directory to store logs
+log_dir = 'evidently_logs'
+os.makedirs(log_dir, exist_ok=True)
+
+# Function to log monitoring results
+def log_monitoring_results(interval=60):
+    while True:
+        dashboard.calculate(reference_data=train_df, current_data=test_df)
+        timestamp = int(time.time())
+        log_path = os.path.join(log_dir, f'dashboard_{timestamp}.html')
+        dashboard.save_html(log_path)
+        time.sleep(interval)
+
+# Start logging (in a real scenario, you would run this in a separate thread or process)
+log_monitoring_results()
+```
+
+### Summary
+This setup monitors your model using Evidently by capturing the PSI and logging the results via the Evidently UI. Adjust the monitoring interval and logging directory as needed for your specific use case. For production use, consider deploying the logging functionality in a more robust environment, such as a cloud service or a dedicated monitoring system.
