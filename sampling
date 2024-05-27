@@ -1,0 +1,53 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import classification_report, confusion_matrix
+from imblearn.under_sampling import RandomUnderSampler, NearMiss, ClusterCentroids, TomekLinks
+
+# Load your data
+# Assuming you have a DataFrame `df` with features and a target column 'target'
+# For example, df = pd.read_csv('your_data.csv')
+
+# Separate features and target
+X = df.drop('target', axis=1)
+y = df['target']
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
+
+# Define the undersampling techniques
+undersamplers = {
+    'Random Undersampling': RandomUnderSampler(random_state=42),
+    'Cluster Centroids': ClusterCentroids(random_state=42),
+    'NearMiss': NearMiss(version=1),
+    'Tomek Links': TomekLinks()
+}
+
+# Train and evaluate the model using different undersampling techniques
+for name, sampler in undersamplers.items():
+    # Apply undersampling
+    X_resampled, y_resampled = sampler.fit_resample(X_train, y_train)
+    
+    # Train a decision tree classifier
+    tree = DecisionTreeClassifier(random_state=42)
+    tree.fit(X_resampled, y_resampled)
+    
+    # Make predictions on the test set
+    y_pred = tree.predict(X_test)
+    
+    # Print evaluation metrics
+    print(f"Results for {name}:")
+    print(confusion_matrix(y_test, y_pred))
+    print(classification_report(y_test, y_pred))
+    print("\n")
+
+# Example of extracting rules from the final chosen model (let's say Random Undersampling worked best)
+best_sampler = RandomUnderSampler(random_state=42)
+X_resampled, y_resampled = best_sampler.fit_resample(X_train, y_train)
+tree = DecisionTreeClassifier(random_state=42)
+tree.fit(X_resampled, y_resampled)
+
+# Extract and print the rules
+from sklearn.tree import export_text
+tree_rules = export_text(tree, feature_names=list(X.columns))
+print(tree_rules)
