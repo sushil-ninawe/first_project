@@ -1,4 +1,4 @@
-ohoo
+yaohoo
 from fuzzywuzzy import fuzz
 
 def load_data(file_path):
@@ -377,3 +377,74 @@ print(f"Risk Score: {risk_score}")
 
 ### Summary
 This approach leverages both NLP techniques and machine learning models to provide a robust solution for detecting fraud in call center transcripts. By combining preprocessing, feature engineering, risk scoring, and a feedback loop, this method can effectively identify and flag potential fraudulent activities.
+
+
+
+
+
+
+Using decision trees to set thresholds for fraud detection is a common and effective approach. Here’s a step-by-step guide to determine the best thresholds using a decision tree:
+
+1. **Data Preparation**:
+   - Gather and preprocess your data, ensuring it is clean and properly labeled (fraudulent vs. non-fraudulent).
+
+2. **Feature Selection**:
+   - Select the relevant features that may indicate fraud (e.g., transaction amount, frequency, user location).
+
+3. **Train-Test Split**:
+   - Split your dataset into training and testing sets, typically using an 80/20 split.
+
+4. **Building the Decision Tree**:
+   - Use a decision tree classifier from a library like Scikit-learn in Python.
+   - Fit the decision tree model to your training data.
+
+```python
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import train_test_split
+
+# Example feature and label arrays
+X = your_feature_array
+y = your_label_array
+
+# Splitting the data
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Training the decision tree model
+tree_model = DecisionTreeClassifier(random_state=42)
+tree_model.fit(X_train, y_train)
+```
+
+5. **Extracting Decision Rules**:
+   - Extract the decision rules from the trained decision tree. These rules will give you the thresholds.
+
+```python
+from sklearn.tree import export_text
+
+tree_rules = export_text(tree_model, feature_names=your_feature_names)
+print(tree_rules)
+```
+
+6. **Threshold Optimization**:
+   - Evaluate the performance of the decision tree on the test set.
+   - Use metrics like precision, recall, F1-score, and ROC-AUC to determine how well your model is performing.
+
+```python
+from sklearn.metrics import classification_report, roc_auc_score
+
+y_pred = tree_model.predict(X_test)
+print(classification_report(y_test, y_pred))
+print("ROC-AUC:", roc_auc_score(y_test, y_pred))
+```
+
+7. **Interpreting Decision Rules**:
+   - The decision rules obtained from the tree will specify thresholds for different features. For example, a rule might state that if the transaction amount is greater than $1000, the transaction is likely to be fraudulent.
+
+8. **Refinement and Tuning**:
+   - If necessary, refine the decision tree by tuning hyperparameters like tree depth, minimum samples per leaf, etc., to prevent overfitting and improve generalization.
+
+```python
+from sklearn.model_selection import GridSearchCV
+
+param_grid = {
+    'max_depth': [None, 10, 20, 30],
+    'min_samples_split': [2
