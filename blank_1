@@ -265,3 +265,19 @@ log_monitoring_results()
 
 ### Summary
 This setup monitors your model using Evidently by capturing the PSI and logging the results via the Evidently UI. Adjust the monitoring interval and logging directory as needed for your specific use case. For production use, consider deploying the logging functionality in a more robust environment, such as a cloud service or a dedicated monitoring system.
+
+
+
+
+
+from pyspark.sql.functions import udf
+from pyspark.sql.types import IntegerType
+from fuzzywuzzy import fuzz
+
+def token_set_ratio_udf(s1, s2):
+    return fuzz.token_set_ratio(s1, s2)
+
+token_set_ratio = udf(token_set_ratio_udf, IntegerType())
+
+
+df_with_ratio = df.withColumn("token_set_ratio", token_set_ratio(df["text1"], df["text2"]))
