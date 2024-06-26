@@ -310,3 +310,43 @@ plt.savefig('kde_plots.png')
 
 # Show the plots (optional)
 plt.show()
+
+
+
+
+
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Example DataFrame
+data = pd.DataFrame({
+    'Column1': [1, 2, 3, 4, 5],
+    'Column2': [3, 4, 2, 5, 1],
+    'Column3': [2, 3, 1, 4, 5],
+    'Column4': [5, 4, 3, 2, 1]  # Adding an extra column for illustration
+})
+
+# Calculate number of rows and columns for subplots
+num_cols = len(data.columns)
+num_rows = (num_cols + 1) // 2  # This will give you 2 rows if there are 4 columns or more
+
+# Create a figure and axis with subplots
+fig, axes = plt.subplots(nrows=num_rows, ncols=2, figsize=(12, 8))
+
+# Flatten axes if there is only one row
+axes = axes.flatten() if num_rows == 1 else axes
+
+# Iterate through each column and plot KDE
+for i, column in enumerate(data.columns):
+    sns.kdeplot(data[column], ax=axes[i], shade=True)
+    axes[i].set_title(f'Distribution of {column}')
+
+# Adjust layout
+plt.tight_layout()
+
+# Save the figure to a file
+plt.savefig('kde_plots.png')
+
+# Show the plots (optional)
+plt.show()
