@@ -1,0 +1,66 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Decision Tree">
+    <mxGraphModel dx="1388" dy="883" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- Start -->
+        <mxCell id="2" value="Start" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="50" width="80" height="80" as="geometry" />
+        </mxCell>
+        
+        <!-- Check email presence -->
+        <mxCell id="3" value="Check Email Presence on Matrix Application" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="180" width="160" height="80" as="geometry" />
+        </mxCell>
+        
+        <!-- Outcome 1: Single Match Found -->
+        <mxCell id="4" value="Email Match Found (Single)" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="180" y="320" width="160" height="80" as="geometry" />
+        </mxCell>
+        
+        <!-- Outcome 2: No Match Found -->
+        <mxCell id="5" value="Email Match Not Found (Stop Processing)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcccc;" vertex="1" parent="1">
+          <mxGeometry x="400" y="320" width="160" height="80" as="geometry" />
+        </mxCell>
+        
+        <!-- Outcome 3: Multiple Matches Found -->
+        <mxCell id="6" value="Multiple Email Matches Found" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="620" y="320" width="160" height="80" as="geometry" />
+        </mxCell>
+        
+        <!-- Further Processing for Single or Latest Email -->
+        <mxCell id="7" value="Further Processing" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ccffcc;" vertex="1" parent="1">
+          <mxGeometry x="400" y="480" width="120" height="80" as="geometry" />
+        </mxCell>
+        
+        <!-- Edges -->
+        <mxCell id="8" edge="1" source="2" target="3" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="9" edge="1" source="3" target="4" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="10" edge="1" source="3" target="5" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="11" edge="1" source="3" target="6" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="12" edge="1" source="4" target="7" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="13" edge="1" source="6" target="7" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
