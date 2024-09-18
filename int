@@ -125,3 +125,93 @@ Allow the candidate to ask questions about the company, team, and role to furthe
 
 This structure balances technical assessments with interpersonal skill evaluation and should give you a comprehensive view of the candidate’s capabilities.
 
+
+
+
+
+SQL Partition
+
+Q1: What is the purpose of PARTITION BY in SQL?
+
+Answer: The PARTITION BY clause in SQL is used to divide the result set into partitions, or subsets, based on one or more columns. It allows window functions (like ROW_NUMBER(), RANK(), DENSE_RANK()) to perform operations within each partition independently, rather than on the entire result set. It's often used with aggregation or ranking functions to compute results for each partition.
+
+
+Q2: Write a query to calculate the total sales for each salesperson, partitioned by region.
+
+Answer:
+
+SELECT salesperson_id, region, sales_amount,
+       SUM(sales_amount) OVER (PARTITION BY region) AS total_sales_by_region
+FROM sales;
+
+Explanation: Here, PARTITION BY region divides the sales data by region, and SUM(sales_amount) calculates the total sales for each partition (region).
+
+
+Q3: What is the difference between PARTITION BY and GROUP BY in SQL?
+
+Answer: GROUP BY is used to aggregate rows into summary rows (one row per group), whereas PARTITION BY doesn’t reduce the number of rows but instead applies a function across rows in each partition. PARTITION BY is used with window functions to calculate values across partitions while still keeping the individual rows intact, whereas GROUP BY collapses data into a summary.
+
+
+
+---
+
+Comparison: ROW_NUMBER(), RANK(), and DENSE_RANK()
+
+Q1: What is the difference between ROW_NUMBER(), RANK(), and DENSE_RANK()?
+
+Answer: These are all ranking functions that assign a unique rank to rows within a partition:
+
+ROW_NUMBER(): Assigns a unique sequential number to each row within a partition, regardless of duplicates. If two rows have the same value, they still get different row numbers.
+
+RANK(): Assigns a rank, with gaps in ranking if there are ties (duplicate values). For example, if two rows tie for 2nd place, both will be assigned a rank of 2, and the next rank will be 4.
+
+DENSE_RANK(): Similar to RANK(), but without gaps. If two rows tie for 2nd place, the next row will be ranked 3, not 4.
+
+
+
+Q2: Provide an example query showing the use of ROW_NUMBER(), RANK(), and DENSE_RANK() on the same dataset.
+
+Answer:
+
+SELECT employee_id, department, salary,
+       ROW_NUMBER() OVER (PARTITION BY department ORDER BY salary DESC) AS row_number,
+       RANK() OVER (PARTITION BY department ORDER BY salary DESC) AS rank,
+       DENSE_RANK() OVER (PARTITION BY department ORDER BY salary DESC) AS dense_rank
+FROM employees;
+
+Explanation:
+
+ROW_NUMBER(): Assigns sequential numbers based on salary within each department.
+
+RANK(): If two employees have the same salary, they get the same rank, but the next rank will skip numbers.
+
+DENSE_RANK(): Similar to RANK(), but with no skipped ranks for ties.
+
+
+
+Q3: What is the main performance implication when choosing between ROW_NUMBER(), RANK(), and DENSE_RANK()?
+
+Answer: The performance difference between these functions is generally negligible in most databases as they are similarly optimized. The main consideration is which behavior (unique sequential number vs. handling ties with or without gaps) best fits your use case. However, complex partitions and large datasets may require further optimization depending on the underlying database engine.
+
+
+Q4: What would the results look like if you use ROW_NUMBER(), RANK(), and DENSE_RANK() for the following salary data?
+
+Answer:
+
+ROW_NUMBER(): | Employee | Salary | ROW_NUMBER() | |----------|--------|--------------| | A        | 5000   | 1            | | B        | 5000   | 2            | | C        | 4000   | 3            | | D        | 3000   | 4            |
+
+RANK(): | Employee | Salary | RANK()       | |----------|--------|--------------| | A        | 5000   | 1            | | B        | 5000   | 1            | | C        | 4000   | 3            | | D        | 3000   | 4            |
+
+DENSE_RANK(): | Employee | Salary | DENSE_RANK() | |----------|--------|--------------| | A        | 5000   | 1            | | B        | 5000   | 1            | | C        | 4000   | 2            | | D        | 3000   | 3            |
+
+
+Explanation:
+
+ROW_NUMBER() always increments by 1, regardless of ties.
+
+RANK() gives tied employees the same rank, but skips the next rank number.
+
+DENSE_RANK() gives tied employees the same rank without gaps in the ranking.
+
+
+
