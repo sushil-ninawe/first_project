@@ -1,0 +1,127 @@
+To effectively assess both soft and hard skills for a Data Engineering profile, here's how you can structure the interview:
+
+1. Introduction & Soft Skill Evaluation (10-15 minutes)
+
+Goal: Assess communication, problem-solving, and teamwork abilities.
+
+Questions:
+
+"Tell me about a recent project you've worked on. What was your role?"
+
+"Describe a time when you faced a challenge while working in a team. How did you handle it?"
+
+"How do you prioritize tasks when managing multiple projects?"
+
+"How do you ensure your code is maintainable and easy for others to understand?"
+
+
+
+2. SQL Skills Assessment (20-30 minutes)
+
+Goal: Test knowledge of query optimization, database design, and data manipulation.
+
+Topics:
+
+Basic Queries: SELECT, JOINs, GROUP BY, etc.
+
+Advanced Queries: Window functions, CTEs, and subqueries.
+
+Optimization: Index usage, query performance tuning.
+
+Scenario-Based: "Given a dataset with millions of records, how would you optimize this query?"
+
+
+Practical Task:
+
+Provide a database schema and ask them to write queries to solve specific problems (e.g., finding top 5 products by sales, complex joins).
+
+A live query execution can also help in assessing debugging skills.
+
+
+
+3. Python Skills Assessment (20-30 minutes)
+
+Goal: Check familiarity with Python for data manipulation, script automation, and pipeline creation.
+
+Topics:
+
+Data Manipulation: Pandas, data cleaning, and ETL tasks.
+
+Scripting: Writing functions to automate tasks, work with APIs.
+
+Object-Oriented Programming (OOP): Class creation, inheritance, etc.
+
+Error Handling: How they handle exceptions and debug issues.
+
+
+Practical Task:
+
+Ask them to write a small script (e.g., parsing JSON data, performing transformations using Pandas).
+
+Evaluate understanding of modularity, function definitions, and clean code practices.
+
+
+
+4. Airflow and Pipeline Management (15-20 minutes)
+
+Goal: Test experience with Airflow and understanding of data pipelines.
+
+Topics:
+
+DAGs, Task Scheduling, and Task Dependencies.
+
+Handling failures and retries.
+
+Experience with real-world Airflow use cases.
+
+
+Scenario-Based Question:
+
+"How would you design a data pipeline that ingests daily transactions, applies transformations, and loads them into a data warehouse?"
+
+"What are the most common Airflow issues you've faced, and how did you resolve them?"
+
+
+
+5. Problem-Solving & Technical Design (20-30 minutes)
+
+Goal: Assess their approach to solving data engineering challenges.
+
+Topics:
+
+Data pipeline design and architecture.
+
+Scalability and performance optimization.
+
+Data modeling and storage techniques.
+
+
+Scenario-Based:
+
+"If you had to design a data architecture for processing streaming data, what components would you choose, and why?"
+
+"How would you ensure data quality in a data pipeline?"
+
+
+
+6. Soft Skills Wrap-Up & Cultural Fit (10-15 minutes)
+
+Goal: Understand if they align with company values and their long-term vision.
+
+Questions:
+
+"How do you stay up to date with new data engineering technologies?"
+
+"What motivates you in your work as a data engineer?"
+
+"What are you looking for in your next role, and how do you see yourself contributing here?"
+
+
+
+7. Q&A with the Candidate (5-10 minutes)
+
+Allow the candidate to ask questions about the company, team, and role to further gauge interest and enthusiasm.
+
+
+This structure balances technical assessments with interpersonal skill evaluation and should give you a comprehensive view of the candidate’s capabilities.
+
