@@ -1,4 +1,4 @@
-To effectively assess both soft and hard skills for a Data Engineering profile, here's how you can structure the interview:
+ooTo effectively assess both soft and hard skills for a Data Engineering profile, here's how you can structure the interview:
 
 1. Introduction & Soft Skill Evaluation (10-15 minutes)
 
@@ -212,6 +212,70 @@ ROW_NUMBER() always increments by 1, regardless of ties.
 RANK() gives tied employees the same rank, but skips the next rank number.
 
 DENSE_RANK() gives tied employees the same rank without gaps in the ranking.
+
+
+
+
+
+
+Snowflake Snowpark is a developer framework for Snowflake that allows developers, data engineers, and data scientists to write data processing logic using familiar programming languages like Python, Scala, and Java, rather than SQL. It enables building data pipelines and performing complex transformations directly in Snowflake without needing to switch between multiple environments.
+
+Key Features of Snowflake Snowpark:
+
+1. Language Flexibility:
+
+Snowpark supports Python, Scala, and Java, making it easier for non-SQL developers to interact with data in Snowflake using familiar programming languages.
+
+Developers can write code for data engineering tasks like data preparation, transformation, and analysis using these languages within Snowflake.
+
+
+
+2. DataFrame API:
+
+Snowpark provides a DataFrame API similar to Pandas (for Python) and Spark. This allows users to manipulate large datasets using a high-level API for operations like filtering, grouping, and joining.
+
+DataFrame operations are pushed down to Snowflake's processing engine, which allows for efficient and scalable execution.
+
+
+
+3. Pushdown Optimization:
+
+One of the core strengths of Snowpark is that it pushes down most operations to the Snowflake engine, utilizing Snowflake's native query optimization and execution capabilities.
+
+This means that all computation is done within Snowflake, which can efficiently process large datasets.
+
+
+
+4. UDFs and Stored Procedures:
+
+Snowpark allows users to define User-Defined Functions (UDFs) and stored procedures in Python, Scala, and Java.
+
+This extends the functionality by enabling the implementation of custom business logic and advanced data transformations directly within Snowflake.
+
+
+
+5. Security and Governance:
+
+Since Snowpark operates directly within Snowflake, it benefits from Snowflake’s security features, such as role-based access control, encryption, and centralized data governance.
+
+
+
+6. Seamless Integration with Snowflake Ecosystem:
+
+Snowpark integrates natively with Snowflake’s ecosystem, which includes support for Zero-Copy Cloning, Time Travel, Data Sharing, and Data Marketplace.
+
+
+
+
+Example Use Cases of Snowpark:
+
+1. Data Engineering:
+
+Snowpark can be used for
+
+
+
+
 
 
 
