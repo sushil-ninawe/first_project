@@ -15,3 +15,10 @@ df[['first_part', 'second_part']] = df['col'].str.split('-', expand=True)
 
 # Remove any leading zeros if needed
 df['first_part'] = df['first_part'].str.lstrip('0')
+
+
+# Remove leading zeros and convert to integer to ensure no leading zeros
+df['col'] = df['col'].astype(str).str.lstrip('0').astype(int)
+
+# Format the numbers back to a 3-digit string with leading zeros
+df['col'] = df['col'].apply(lambda x: f'{x:03d}')
