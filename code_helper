@@ -1,0 +1,9 @@
+from pyspark.sql.functions import col
+
+# Assuming your DataFrame is df and column name is 'counter_party_name'
+
+filtered_df = df.filter(
+    (col("counter_party_name").isNotNull()) &  # Not null
+    (col("counter_party_name") != "") &        # Not an empty string
+    (col("counter_party_name") != "NA")        # Not 'NA'
+)
