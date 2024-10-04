@@ -1,3 +1,35 @@
+from datetime import datetime, timedelta
+
+def get_first_and_last_day_of_month(date=None):
+    # If no date is passed, use the current date
+    if date is None:
+        date = datetime.today()
+
+    # Get the first day of the month
+    first_day = date.replace(day=1)
+
+    # Get the last day of the month by finding the first day of the next month, then subtracting one day
+    if date.month == 12:  # December edge case
+        last_day = date.replace(year=date.year + 1, month=1, day=1) - timedelta(days=1)
+    else:
+        last_day = date.replace(month=date.month + 1, day=1) - timedelta(days=1)
+
+    return first_day, last_day
+
+
+# Example usage:
+first_day, last_day = get_first_and_last_day_of_month()
+print("First day of the month:", first_day.strftime("%Y-%m-%d"))
+print("Last day of the month:", last_day.strftime("%Y-%m-%d"))
+
+
+
+
+
+
+
+
+
 ohyaCertainly! You can achieve the equivalent using pandas operations. Assuming you have two DataFrames named `emp_df` and `terminated_emp_df`, you can use the `merge` function to perform the equivalent of the SQL query. Here's an example:
 
 ```python
