@@ -1,0 +1,27 @@
+The issue with multiple small files being created in your Hive dataset likely stems from the parallelism in your Spark job. Spark writes out data in partitions, and each partition is written as a separate file by default. If your DataFrame has 11 partitions, Spark will write 11 small files.
+
+Why does this happen?
+Spark tries to parallelize operations for efficiency, so the data is split across partitions, and each partition is written to a separate file when you write out the DataFrame. If the data in each partition is small, the resulting files will also be small. This leads to performance issues, especially in Hadoop, which is not optimized for a large number of small files (as the NameNode keeps metadata for each file).
+
+
+# Repartition to 1 partition before writing (not always recommended for large datasets)
+df = df.repartition(1)
+
+repartition(1) in PySpark redistributes the data in the DataFrame into exactly one partition. This means that after calling repartition(1), all the data will be shuffled and collected into a single partition, and when written to disk, the result will be one output file.
+
+Key Points:
+Repartitioning:
+
+repartition(1) will cause a shuffle of the data across the cluster to consolidate everything into a single partition.
+This can be costly in terms of performance if the DataFrame is large because all data needs to move to a single node for processing.
+Output:
+
+When you write the DataFrame to storage after calling repartition(1), you will get a single output file (e.g., a single .parquet, .csv, or Hive file).
+This is often used to avoid the creation of multiple small files, as you mentioned in your case with Hadoop, but it can lead to performance bottlenecks due to overloading a single executor with all the data.
+When to Use:
+
+You may want to use repartition(1) if your dataset is relatively small and you require a single file for easier downstream processing.
+However, for large datasets, this is not recommended because it eliminates parallelism, potentially leading to out-of-memory errors and long execution times.
+Alternative:
+
+Instead of using repartition(1), if you need fewer files but still want some parallelism, consider using coalesce(N), where N is the number of partitions/files you want to produce without a full shuffle. For example, coalesce(2) would reduce the number of partitions to 2 while avoiding the overhead of a full shuffle.
