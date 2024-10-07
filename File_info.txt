@@ -1,3 +1,7 @@
 Changes were made to this file - 18 Mar 0139 
  c- 02 
 branch chg - 01 
+
+
+
+find /path/to/folder -type f -mtime -180 -exec ls -lS {} + | head -n 10
